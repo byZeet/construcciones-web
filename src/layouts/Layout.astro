@@ -1,6 +1,23 @@
 ---
 import Navbar from "../components/Navbar.astro";
-import Footer from "../components/Footer.astro";	
+import Footer from "../components/Footer.astro";
+
+// IMPORTACIÓN DE ESTILOS (Astro los procesará y optimizará automáticamente)
+import "../styles/global.css";
+import "../styles/navbar.css";
+import "../styles/hero.css";
+import "../styles/index.css";
+import "../styles/productos-top.css";
+import "../styles/eligenos-section.css";
+import "../styles/modelos-casas.css";
+import "../styles/sobre-nosotros.css";
+import "../styles/footer.css";
+import "../styles/presupuesto.css";
+import "../styles/simulador-presupuesto.css";
+
+interface Props {
+	title?: string;
+}
 
 const { title = "Colven Construcciones" } = Astro.props;
 ---
@@ -11,26 +28,13 @@ const { title = "Colven Construcciones" } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-
-		<!-- Estilos globales -->
-		<link rel="stylesheet" href="src/styles/global.css" />
-		<link rel="stylesheet" href="src/styles/navbar.css" />
-		<link rel="stylesheet" href="src/styles/hero.css" />
-		<link rel="stylesheet" href="src/styles/index.css" />
-		<link rel="stylesheet" href="src/styles/productos-top.css" />
-		<link rel="stylesheet" href="src/styles/eligenos-section.css" />
-		<link rel="stylesheet" href="src/styles/modelos-casas.css" />
-		<link rel="stylesheet" href="src/styles/sobre-nosotros.css" />
-		<link rel="stylesheet" href="src/styles/footer.css" />
-		<link rel="stylesheet" href="src/styles/presupuesto.css" />
-		<link rel="stylesheet" href="src/styles/simulador-presupuesto.css" />
-
 	</head>
 
 	<body>
