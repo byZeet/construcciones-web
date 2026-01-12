@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Simulador de Presupuesto | Colven Construcciones">
+  <main class="simulator-page">
+    <div class="container">
+      <header class="simulator-header">
+        <span class="eyebrow">Configurador</span>
+        <h1>Simula tu casa de madera</h1>
+        <span class="underline-orange"></span>
+      </header>
+
+      <form id="simulator-form" class="simulator-grid" onsubmit="return false;">
+        <div class="options-panel">
+          
+          <div class="option-group">
+            <h3>1. Dimensiones y Modelo</h3>
+            <div class="radio-cards">
+              <label class="radio-card">
+                <input type="radio" name="size" value="15000" data-label="Modelo Garden (25m²)" checked>
+                <div class="card-content"><strong>25m²</strong><br><small>Desde 15.000€</small></div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="size" value="45000" data-label="Modelo Alpina (60m²)">
+                <div class="card-content"><strong>60m²</strong><br><small>Desde 45.000€</small></div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="size" value="85000" data-label="Residencia (120m²)">
+                <div class="card-content"><strong>120m²</strong><br><small>Desde 85.000€</small></div>
+              </label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <h3>2. Calidad de Aislamiento</h3>
+            <select id="wood-thickness" class="sim-select">
+              <option value="0" data-label="Muro Estándar 34mm">Madera 34mm (Básico)</option>
+              <option value="5200" data-label="Muro Premium 44mm">Madera 44mm (+5.200€)</option>
+              <option value="12000" data-label="Doble Muro Insulado">Doble Muro + Lana de Roca (+12.000€)</option>
+            </select>
+          </div>
+
+          <div class="option-group">
+            <h3>3. Extras de Construcción</h3>
+            <div class="checkbox-list">
+              <label class="check-item"><input type="checkbox" class="extra" value="3800" data-label="Porche de madera"> Porche exterior (+3.800€)</label>
+              <label class="check-item"><input type="checkbox" class="extra" value="4500" data-label="Suelo radiante"> Suelo radiante (+4.500€)</label>
+              <label class="check-item"><input type="checkbox" class="extra" value="2200" data-label="Ventanas Climalit"> Pack Ventanas Climalit (+2.200€)</label>
+            </div>
+          </div>
+
+        </div>
+
+<aside class="summary-panel">
+  <div class="budget-app-card">
+    <div class="card-header">
+      <span class="invoice-number">Nº PROV-2024</span>
+      <h3>Resumen del Proyecto</h3>
+      <div id="main-model-display" class="main-price-display">96,00€</div>
+    </div>
+
+    <div class="card-details">
+      <p class="details-title">DETALLES</p>
+      <ul id="summary-list" class="app-summary-list">
+        </ul>
+      
+      <div class="tax-info">
+        <div class="tax-row"><span>Subtotal</span> <span id="subtotal-val">0€</span></div>
+        <div class="tax-row"><span>IVA (21%)</span> <span id="iva-val">0€</span></div>
+      </div>
+    </div>
+
+    <div class="card-total-footer">
+      <div class="total-label">Total</div>
+      <div class="total-amount" id="total-price">0,00€</div>
+    </div>
+
+    <div class="card-actions">
+      <button class="btn-app-mail">
+        Enviar por mail <span class="icon">✉️</span>
+      </button>
+      <button class="btn-app-whatsapp">
+        Enviar por Whatsapp <span class="icon">💬</span>
+      </button>
+      <button class="btn-app-pdf" id="download-pdf">
+  Descargar presupuesto PDF <span class="icon">📄</span>
+</button>
+      <div class="disclaimer-note">
+        * Los precios son orientativos y pueden variar según especificaciones finales.
+    </div>
+  </div>
+</aside>
+      </form>
+    </div>
+  </main>
+
+  <script src="../../scripts/simulator.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</Layout>

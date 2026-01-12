@@ -1,0 +1,68 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Casas prefabricadas | Colven Construcciones">
+
+	<main class="casas-selector">
+		<a href="/casas/online" class="card">
+			<div class="icon">🛒</div>
+			<h3>Compra en línea</h3>
+			<p>4 m² – 89 m²</p>
+		</a>
+
+		<a href="/casas/modulares" class="card destacada">
+			<h3>Casas modulares</h3>
+			<p>14 m² – 209 m²</p>
+			<span>Más información →</span>
+		</a>
+
+		<a href="/casas/madera" class="card">
+			<h3>Casas de madera</h3>
+			<p>32 m² – 208 m²</p>
+		</a>
+	</main>
+</Layout>
+
+<style>
+.casas-selector {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	min-height: calc(100vh - 64px);
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 3rem;
+	background: #efefef;
+	border-right: 1px solid #ddd;
+	transition: all 0.3s ease;
+}
+
+.card:hover {
+	background: #fff;
+}
+
+.destacada {
+	background: #fff;
+}
+
+.destacada h3 {
+	color: #ff6a00;
+}
+
+.icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+	.casas-selector {
+		grid-template-columns: 1fr;
+	}
+}
+</style>

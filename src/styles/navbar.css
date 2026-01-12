@@ -1,0 +1,294 @@
+/* ===============================
+   VARIABLES Y BASE
+================================ */
+:root {
+  --ivory: #ffffff;
+  --anthracite: #1a1a1a;
+  --wood-dark: #6B4F3F;
+  --gold: #C1A35F;
+  --text-muted: #888888;
+  --mobile-top-bg: #fdfdfd;
+  --transition-premium: all 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--ivory);
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--ivory);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ===============================
+   VERSION ESCRITORIO (PC)
+================================ */
+.mobile-top-bar {
+  display: none;
+}
+
+.navbar-inner {
+  max-width: 1320px;
+  height: 100px;
+  margin: 0 auto;
+  padding: 0 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img {
+  height: 140px; 
+  width: auto;
+  display: block;
+}
+
+.main-nav {
+  display: flex;
+  gap: 2.6rem;
+}
+
+.main-nav a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--anthracite);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+  color: var(--gold);
+}
+
+.right-group {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+}
+
+.desktop-contact-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.desktop-contact-info .phone {
+  font-weight: 700;
+  color: var(--anthracite);
+}
+
+.icon-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.icon-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--gold);
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.btn-cta {
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--wood-dark);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+/* Ocultar elementos exclusivos de móvil en PC */
+.mobile-menu-btn, 
+.mobile-only-footer {
+  display: none;
+}
+
+/* ===============================
+   VERSION MOVIL (PREMIUM EDITORIAL)
+================================ */
+@media (max-width: 1024px) {
+  
+  .mobile-top-bar {
+    display: block;
+    background: var(--mobile-top-bg);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    padding: 8px 0;
+  }
+  
+  .top-bar-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: var(--anthracite);
+  }
+  
+  .top-bar-content .sep { color: #ddd; }
+  .top-bar-content .phone { font-weight: 700; }
+
+  .navbar-inner {
+    height: 70px;
+    padding: 0 1.5rem;
+  }
+
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .logo img {
+    height: 140px;
+  }
+
+  /* Ocultamos info de contacto de PC pero MANTENEMOS el icono de favoritos */
+  .desktop-contact-info, .desktop-cta { 
+    display: none; 
+  }
+
+  /* Botón Hamburguesa */
+  .mobile-menu-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: none;
+    border: none;
+    z-index: 2100;
+  }
+
+  .mobile-menu-btn span {
+    width: 24px;
+    height: 1.5px;
+    background: var(--anthracite);
+    transition: var(--transition-premium);
+  }
+
+  .mobile-menu-btn.active span:nth-child(1) { transform: translateY(9.5px) rotate(45deg); }
+  .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+  .mobile-menu-btn.active span:nth-child(3) { transform: translateY(-9.5px) rotate(-45deg); }
+
+  /* Menú Full Screen */
+  .nav-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--ivory);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 120px 1.8rem 4rem 1.8rem;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition-premium);
+    z-index: 1500;
+  }
+
+  .nav-container.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .main-nav {
+    flex-direction: column;
+    text-align: left; 
+    gap: 0.1rem; 
+  }
+
+  .main-nav a {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    color: var(--anthracite);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+  }
+
+  .main-nav a.active { color: var(--gold); }
+
+  .nav-container.open .main-nav a {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Animación escalonada */
+  .nav-container.open .main-nav a:nth-child(1) { transition-delay: 0.1s; }
+  .nav-container.open .main-nav a:nth-child(2) { transition-delay: 0.2s; }
+  .nav-container.open .main-nav a:nth-child(3) { transition-delay: 0.3s; }
+  .nav-container.open .main-nav a:nth-child(4) { transition-delay: 0.4s; }
+
+  /* Footer del menú corregido */
+  .mobile-only-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding-top: 2rem;
+  }
+
+  .footer-address {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .footer-address strong {
+    color: var(--anthracite);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Botón Marrón Redondeado DENTRO del Nav */
+  .mobile-only-footer .btn-cta {
+    display: block;
+    width: 100%;
+    background: var(--wood-dark);
+    color: white;
+    padding: 1.1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+}

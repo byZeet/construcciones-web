@@ -1,0 +1,184 @@
+/* ===============================
+   MODELOS EXCLUSIVOS
+================================ */
+
+.models {
+  padding: 6rem 1rem 3rem;
+  background: #faf9f7;
+}
+
+.models-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.models-header .eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a7f72;
+}
+
+.models-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  margin: 0.8rem 0;
+}
+
+.models-header p {
+  color: #777;
+  font-style: italic;
+}
+
+/* GRID */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+/* CARD */
+.models-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+
+.model-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  margin-bottom: 1rem;
+}
+
+.model-card h3 {
+  font-size: 0.95rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.model-card span {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .models-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .models-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ===============================
+   FILTROS MODELOS
+================================ */
+
+.model-filters {
+  padding: 3rem 1rem 6rem;
+  background: #f7f5f2;
+}
+
+.filters-card {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1.4fr 2fr 1fr 1fr auto;
+  gap: 1.5rem;
+  align-items: end;
+
+  background: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 22px;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* GRUPOS */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filter-group label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #8a7f72;
+}
+
+/* INPUTS */
+.filter-group select,
+.filter-group input {
+  appearance: none;
+  border: 1px solid #e3e0db;
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+
+  font-size: 0.9rem;
+  background: #faf9f7;
+  color: #1f1f1f;
+}
+
+/* RANGE */
+.range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.range-inputs input {
+  width: 100%;
+}
+
+.dash {
+  opacity: 0.4;
+}
+
+/* BOTÓN */
+.filter-btn {
+  height: 46px;
+  padding: 0 2.2rem;
+  border-radius: 14px;
+
+  background: #8a5a3c;
+  color: #ffffff;
+  border: none;
+
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background: #734a32;
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .filters-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-btn {
+    grid-column: span 2;
+    width: 100%;
+  }
+}

@@ -1,0 +1,186 @@
+
+/* ===============================
+   PRODUCTOS TOP
+================================ */
+
+.top-products {
+  padding: 6rem 1rem;
+  background: #ffffff;
+}
+
+.top-products-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.top-products-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.top-products-header .underline {
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #ff6a2a;
+  margin: 1rem auto 0;
+  border-radius: 2px;
+}
+
+/* GRID */
+.top-products-grid {
+  display: grid;
+position: relative;
+  isolation: isolate;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+/* CARD */
+/* CARD ACTUALIZADA */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: center;
+}
+
+
+.product-card:hover .product-media img,
+.product-card:focus-within .product-media img {
+  transform: scale(1.05);
+}
+
+
+
+/* Asegura que el contenedor de los badges sea el punto de referencia */
+.product-media {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+  /* Añadimos esto para asegurar que el contexto sea limpio */
+  isolation: isolate; 
+}
+
+.product-media img {
+  display: block;
+  transition: transform 0.4s ease;
+  position: relative;
+  z-index: 1;
+  will-change: transform; /* Ayuda a una animación más fluida */
+}
+
+/* Eleva los badges y el botón de favoritos */
+.badge-top, 
+.badge-buy, 
+.fav-btn {
+  z-index: 10; /* Un valor alto para que siempre ganen a la imagen */
+}
+
+/* BADGES */
+.badge-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #3a3a3a;
+  color: white;
+  font-size: 0.65rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  letter-spacing: 0.12em;
+}
+
+.badge-buy {
+  position: absolute;
+  top: 44px;
+  left: 12px;
+  background: #ffffff;
+  color: #000;
+  font-size: 0.65rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  letter-spacing: 0.12em;
+}
+
+/* FAVORITO */
+.fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* TEXTO */
+.product-card h3 {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  
+  /* NUEVO: Forzar altura de 2 líneas */
+  display: flex;
+  align-items: center;      /* Centra el texto verticalmente si es una línea */
+  justify-content: center;   /* Centra horizontalmente */
+  min-height: 2.5rem;        /* Ajusta este valor según el tamaño de tu fuente */
+}
+
+.product-features {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  font-size: 0.8rem;
+  color: #666;
+  list-style: none;
+  padding: 0;
+  
+  /* NUEVO: Espaciado fijo */
+  margin-bottom: 1rem;
+  min-height: 1.5rem; /* Asegura que la fila de iconos siempre mida lo mismo */
+}
+
+.price {
+  font-size: 1rem;
+  margin-top: auto;    /* Empuja el precio y el botón al fondo */
+  margin-bottom: 1.2rem;
+}
+
+/* BOTÓN */
+.btn-outline {
+  display: inline-block;
+  padding: 0.7rem 1.8rem;
+  border-radius: 999px;
+  border: 1px solid #d0d0d0;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: #333;
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .top-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .top-products-grid {
+    grid-template-columns: 1fr;
+  }
+}

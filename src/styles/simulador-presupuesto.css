@@ -1,0 +1,310 @@
+/* Estilos específicos del configurador */
+.simulator-page {
+    padding: 4rem 0;
+    background: #fdfdfd;
+}
+
+.simulator-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.simulator-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    text-transform: uppercase;
+    margin: 1rem 0;
+}
+
+.underline-orange {
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #ff6a2a;
+    margin: 1rem auto;
+}
+
+.simulator-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 4rem;
+    align-items: start;
+}
+
+.option-group {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #eee;
+}
+
+.option-group h3 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.radio-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.radio-card input {
+    display: none;
+}
+
+.card-content {
+    padding: 1.5rem;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.radio-card input:checked+.card-content {
+    border-color: #ff6a2a;
+    background: #fff9f6;
+}
+
+.sim-select {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+.checkbox-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.color-picker {
+    display: flex;
+    gap: 2rem;
+}
+
+.color-option {
+    text-align: center;
+    cursor: pointer;
+}
+
+.color-option input {
+    display: none;
+}
+
+.swatch {
+    display: block;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem;
+    border: 3px solid #eee;
+    transition: 0.2s;
+}
+
+.color-option input:checked+.swatch {
+    border-color: #ff6a2a;
+    transform: scale(1.1);
+}
+
+.summary-sticky {
+    position: sticky;
+    top: 2rem;
+    background: #333;
+    color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+}
+
+.summary-list {
+    list-style: none;
+    padding: 0;
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+}
+
+.total-box {
+    border-top: 1px solid #444;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-box strong {
+    font-size: 2rem;
+    color: #ff6a2a;
+}
+
+/* DISEÑO TIPO APP PRESUPUESTO */
+.budget-app-card {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f2f5;
+    color: #1a1f36;
+}
+
+.card-header {
+    margin-bottom: 2rem;
+}
+
+.invoice-number {
+    color: #a3acbf;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.card-header h3 {
+    font-size: 1.4rem;
+    margin: 0.5rem 0;
+    color: #1a1f36;
+}
+
+.main-price-display {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #4f566b;
+}
+
+.details-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #a3acbf;
+    margin-bottom: 1rem;
+}
+
+.app-summary-list {
+    list-style: none;
+    padding: 0;
+    border-bottom: 1px solid #f0f2f5;
+    margin-bottom: 1rem;
+}
+
+.app-summary-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+    font-size: 0.9rem;
+    color: #4f566b;
+}
+
+.tax-info {
+    margin-bottom: 2rem;
+}
+
+.tax-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #a3acbf;
+    margin-bottom: 0.5rem;
+}
+
+.card-total-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fc;
+    padding: 1.2rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.total-label {
+    font-weight: 700;
+    color: #1a1f36;
+}
+
+.total-amount {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1a1f36;
+}
+
+/* BOTONES APP */
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.btn-app-mail,
+.btn-app-whatsapp {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 50px;
+    border: 1.5px solid #e3e8ee;
+    background: white;
+    font-weight: 600;
+    color: #4f566b;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+
+.btn-app-whatsapp {
+    border-color: #25D366;
+    color: #25D366;
+}
+
+.btn-app-mail:hover {
+    background: #f8f9fc;
+}
+
+.btn-app-whatsapp:hover {
+    background: #e9f7ef;
+}
+
+.btn-app-pdf {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 50px;
+  border: 1.5px solid #1a1f36; /* Un tono más oscuro para diferenciarlo */
+  background: #1a1f36;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+
+.btn-app-pdf:hover {
+  background: #2e3552;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    .simulator-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .radio-cards {
+        grid-template-columns: 1fr;
+    }
+}

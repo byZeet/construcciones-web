@@ -1,0 +1,105 @@
+/* ===============================
+   FUENTE BASE (solo tipografía)
+================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  margin: 0;
+
+  /* BARRA DE NAVEGACIÓN (Firefox) */
+  scrollbar-width: thin;
+  scrollbar-color: #8a5a3c #faf9f7;
+
+  /* ESTRUCTURA PARA EMPUJAR EL FOOTER AL FINAL */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* El contenedor principal crece para ocupar el espacio sobrante */
+main {
+  flex: 1;
+}
+
+/* BARRA DE NAVEGACIÓN (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #faf9f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8a5a3c; /* Color marrón del botón */
+  border-radius: 10px;
+  border: 2px solid #faf9f7; /* Margen elegante */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #734a32; /* Tono más oscuro al pasar el ratón */
+}
+
+/* ===============================
+   TEXTOS BÁSICOS (no invasivos)
+================================ */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+small {
+  font-size: 0.85rem;
+}
+
+/* ===============================
+   UTILIDADES MÍNIMAS Y CORRECCIONES DE BUG
+================================ */
+.container {
+  max-width: 1280px;
+  margin: auto;
+  padding: 0 1.5rem;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* SOLUCIÓN AL BUG DE HOVER / Z-INDEX */
+.product-media {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* Crea un contexto de capas seguro */
+}
+
+.product-media img {
+  position: relative;
+  z-index: 1; /* Imagen al fondo */
+  transition: transform 0.4s ease;
+}
+
+/* Asegura que los badges y el botón favorito siempre ganen en el hover */
+.badge-top, 
+.badge-buy, 
+.fav-btn {
+  z-index: 10 !important; 
+}

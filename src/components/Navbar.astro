@@ -1,0 +1,68 @@
+---
+// Navbar.astro
+---
+
+<header class="navbar">
+  <div class="mobile-top-bar">
+    <div class="top-bar-content">
+      <span class="phone">+34 848 88 80 00</span>
+      <span class="sep">|</span>
+      <span class="hours">L–V · 08:00–17:00</span>
+    </div>
+  </div>
+
+  <div class="navbar-inner">
+    <button class="mobile-menu-btn" id="menu-toggle" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <a href="/" class="logo">
+      <img src="/images/logo.png" alt="TAYGA · Casas de madera" />
+    </a>
+
+    <nav class="nav-container" id="nav-menu">
+      <div class="main-nav">
+        <a href="/" class="active">Home</a> 
+        <a href="/casas-a-medida">Casas a medida</a>
+        <a href="/obras-reales">Obras reales</a>
+        <a href="/contacto">Contacto</a>
+      </div>
+      
+      <div class="mobile-only-footer">
+        <div class="footer-address">
+          <p><strong>ESTUDIO CENTRAL</strong></p>
+          <p>Calle Falsa 123, Madrid</p>
+          <p>info@taygacasas.com</p>
+        </div>
+        <a href="/contacto" class="btn-cta">Solicitar info</a>
+      </div>
+    </nav>
+
+    <div class="right-group">
+      <div class="desktop-contact-info">
+        <span class="phone">+34 848 88 80 00</span>
+        <span class="hours">L–V · 08:00–17:00</span>
+      </div>
+
+      <a href="/favoritos" class="icon-btn">
+        <img src="/images/favoritos.svg" alt="Favoritos" />
+        <span class="badge">0</span>
+      </a>
+
+      <a href="/contacto" class="btn-cta desktop-cta">Solicitar info</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('nav-menu');
+
+  btn?.addEventListener('click', () => {
+    btn.classList.toggle('active');
+    menu?.classList.toggle('open');
+    document.body.style.overflow = menu?.classList.contains('open') ? 'hidden' : 'auto';
+  });
+</script>
