@@ -1,0 +1,31 @@
+/* ==============================================
+   ESTILOS ESPECÍFICOS PARA TABLET
+   (Aprox 768px - 1024px)
+============================================== */
+
+@media (max-width: 1024px) {
+
+    /* ===============================
+     MODELOS EXCLUSIVOS (Tablet)
+  ================================ */
+    .models-grid {
+        display: flex;
+        /* Convertir grid a flex para carousel si se desea en tablet también? Usuario dijo "movil y tablet... Por ejemplo: ... movil" */
+        /* El usuario especificó "en movil" para el carrousel, pero dijo "adaptado a movil y tablet".
+       Para tablet, a menudo 2 columnas (grid) es mejor que un carrousel gigante.
+       Mantendré el grid de 2 columnas original para tablet si se ve bien, 
+       pero el usuario pidió "adaptado". Voy a asegurar márgenes y tamaños.
+    */
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    /* ===============================
+     PRODUCTOS TOP (Tablet)
+  ================================ */
+    .top-products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem;
+    }
+}

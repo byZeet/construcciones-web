@@ -3,6 +3,13 @@
 ================================ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+:root {
+  --tayga-accent: #f1d498;
+  /* Champagne Cream */
+  --tayga-accent-shadow: rgba(245, 224, 183, 0.6);
+  --tayga-accent-rgb: 245, 224, 183;
+}
+
 body {
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -12,7 +19,7 @@ body {
 
   /* BARRA DE NAVEGACIÓN (Firefox) */
   scrollbar-width: thin;
-  scrollbar-color: #8a5a3c #faf9f7;
+  scrollbar-color: var(--tayga-accent) #faf9f7;
 
   /* ESTRUCTURA PARA EMPUJAR EL FOOTER AL FINAL */
   display: flex;
@@ -35,19 +42,26 @@ main {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8a5a3c; /* Color marrón del botón */
+  background: var(--tayga-accent);
+  /* Color marrón del botón */
   border-radius: 10px;
-  border: 2px solid #faf9f7; /* Margen elegante */
+  border: 2px solid #faf9f7;
+  /* Margen elegante */
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #734a32; /* Tono más oscuro al pasar el ratón */
-}
+/* ::-webkit-scrollbar-thumb:hover {
+  background: #734a32;
+} */
 
 /* ===============================
    TEXTOS BÁSICOS (no invasivos)
 ================================ */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -88,18 +102,20 @@ img {
 .product-media {
   position: relative;
   overflow: hidden;
-  isolation: isolate; /* Crea un contexto de capas seguro */
+  isolation: isolate;
+  /* Crea un contexto de capas seguro */
 }
 
 .product-media img {
   position: relative;
-  z-index: 1; /* Imagen al fondo */
+  z-index: 1;
+  /* Imagen al fondo */
   transition: transform 0.4s ease;
 }
 
 /* Asegura que los badges y el botón favorito siempre ganen en el hover */
-.badge-top, 
-.badge-buy, 
+.badge-top,
+.badge-buy,
 .fav-btn {
-  z-index: 10 !important; 
+  z-index: 10 !important;
 }

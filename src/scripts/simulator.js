@@ -110,7 +110,7 @@ const setupPDFButton = () => {
         container.appendChild(elementClone);
         const header = document.createElement('div');
 header.innerHTML = `
-    <h1 style="color: #1a1f36; font-family: serif; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6a2a; padding-bottom: 10px;">
+    <h1 style="color: #1a1f36; font-family: serif; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #F5E0B7; padding-bottom: 10px;">
         Colven Construcciones
     </h1>
     <p style="font-size: 10px; color: #888; margin-bottom: 30px;">Presupuesto de Casa de Madera - Válido por 15 días</p>

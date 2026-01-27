@@ -1,0 +1,160 @@
+/* ===============================
+    SECCIÓN TESTIMONIOS
+================================ */
+
+.testimonials-section {
+    padding: 6rem 1rem;
+    background: #fdfdfd;
+    /* Mismo fondo que presupuesto para continuidad o cambiar si se prefiere contraste */
+    overflow: hidden;
+    /* Para el scroll si es necesario */
+}
+
+.testimonials-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.testimonials-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.testimonials-header .eyebrow {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.testimonials-grid {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding-bottom: 2rem;
+    /* Espacio para scrollbar si aparece */
+    /* scroll-snap-type removed for smooth auto-scroll */
+    -webkit-overflow-scrolling: touch;
+    max-width: 1400px;
+    /* Un poco más ancho para dejar ver más cards */
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Ocultar scrollbar visualmente de forma forzada */
+.testimonials-grid::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+}
+
+.testimonials-grid {
+    -ms-overflow-style: none !important;
+    /* IE and Edge */
+    scrollbar-width: none !important;
+    /* Firefox */
+}
+
+.testimonial-card {
+    flex: 0 0 350px;
+    /* Ancho fijo para las cards */
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    /* scroll-snap-align removed */
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.testimonial-rating {
+    color: var(--tayga-accent);
+    /* Naranja corporativo */
+    font-weight: 700;
+    display: flex;
+    gap: 0.2rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.testimonial-text {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.testimonial-author .avatar {
+    width: 40px;
+    height: 40px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.testimonial-author .info strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.testimonial-author .info span {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+@media (max-width: 768px) {
+    .testimonials-section {
+        padding: 4rem 1rem;
+        /* Menos padding vertical */
+    }
+
+    .testimonials-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .testimonials-header h2 {
+        font-size: 2rem;
+        /* Texto más pequeño */
+    }
+
+    .testimonials-grid {
+        gap: 1rem;
+        /* Menos hueco entre cards */
+    }
+
+    .testimonial-card {
+        flex: 0 0 300px;
+        /* Ancho fijo más controlado en vez de vw para evitar que sean enormes en tablets */
+        padding: 1.5rem;
+        /* Menos padding interno */
+        max-width: 85vw;
+        /* Pero que nunca supere el 85% del ancho de pantalla */
+    }
+
+    .testimonial-text {
+        font-size: 0.9rem;
+        /* Texto un pelín más pequeño */
+    }
+}

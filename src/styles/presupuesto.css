@@ -4,7 +4,8 @@
 
 .budget-section {
   padding: 6rem 1rem;
-  background: #fdfdfd; /* Un tono casi blanco para diferenciar de la anterior */
+  background: #fdfdfd;
+  /* Un tono casi blanco para diferenciar de la anterior */
 }
 
 .budget-header {
@@ -32,7 +33,8 @@
   display: block;
   width: 60px;
   height: 3px;
-  background: #ff6a2a; /* Naranja corporativo */
+  background: var(--tayga-accent);
+  /* Naranja corporativo */
   margin: 1rem auto 0;
   border-radius: 2px;
 }
@@ -73,7 +75,7 @@
 }
 
 .budget-steps li strong {
-  color: #ff6a2a;
+  color: var(--tayga-accent);
   margin-right: 0.5rem;
 }
 
@@ -82,7 +84,7 @@
   background: #ffffff;
   padding: 2.5rem;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .form-group {
@@ -95,8 +97,8 @@
   gap: 1rem;
 }
 
-.budget-form input, 
-.budget-form select, 
+.budget-form input,
+.budget-form select,
 .budget-form textarea {
   width: 100%;
   padding: 0.9rem 1.2rem;
@@ -107,11 +109,11 @@
   transition: border-color 0.3s ease;
 }
 
-.budget-form input:focus, 
-.budget-form select:focus, 
+.budget-form input:focus,
+.budget-form select:focus,
 .budget-form textarea:focus {
   outline: none;
-  border-color: #ff6a2a;
+  border-color: var(--tayga-accent);
   background: #fff;
 }
 
@@ -132,9 +134,9 @@
 }
 
 .btn-submit:hover {
-  background: #ff6a2a;
+  background: var(--tayga-accent);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 106, 42, 0.3);
+  box-shadow: 0 5px 15px rgba(var(--tayga-accent-rgb), 0.3);
 }
 
 /* Ajustes para el botón del simulador */
@@ -142,12 +144,14 @@
   margin-top: 2.5rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Alineado a la izquierda como el texto */
+  align-items: flex-start;
+  /* Alineado a la izquierda como el texto */
   gap: 0.8rem;
 }
 
 .btn-simulator {
-  border-color: #333; /* Un poco más oscuro para que destaque sobre el fondo claro */
+  border-color: #333;
+  /* Un poco más oscuro para que destaque sobre el fondo claro */
   padding: 0.9rem 2.2rem;
 }
 
@@ -165,7 +169,7 @@
     grid-template-columns: 1fr;
     gap: 3rem;
   }
-  
+
   .budget-header h2 {
     font-size: 2.2rem;
   }
@@ -175,12 +179,13 @@
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .budget-form-wrapper {
     padding: 1.5rem;
   }
 }
-  .simulator-cta {
-    align-items: center;
-    text-align: center;
-  }
+
+.simulator-cta {
+  align-items: center;
+  text-align: center;
+}

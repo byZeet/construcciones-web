@@ -1,0 +1,92 @@
+/* ==============================================
+   ESTILOS ESPECÍFICOS PARA MÓVIL
+   (Max width 768px)
+============================================== */
+
+@media (max-width: 768px) {
+
+    /* ===============================
+     CARROUSELS HORIZONTALES (Manuales)
+  ================================ */
+    /* Aplicar a Modelos y Productos Top */
+    .models-grid,
+    .top-products-grid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 1.5rem !important;
+        padding-bottom: 2rem !important;
+        /* Espacio para scroll */
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+
+        /* Snap para que se pare en caros */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+
+        /* Reset de Grid */
+        grid-template-columns: none !important;
+    }
+
+    /* Ocultar barra de scroll para limpieza visual */
+    .models-grid::-webkit-scrollbar,
+    .top-products-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .models-grid,
+    .top-products-grid {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    /* TARJETAS EN CARROUSEL */
+    .model-card,
+    .product-card {
+        flex: 0 0 85vw !important;
+        /* 85% del ancho de pantalla */
+        scroll-snap-align: center;
+        width: auto !important;
+        /* Reset de anchos fijos si los hubiera */
+        max-width: 320px;
+        /* Que no sean gigantes si el móvil es ancho */
+        margin: 0 auto;
+        /* Centrado si es necesario */
+    }
+
+    /* Asegurar que las imágenes cubran */
+    .model-card img {
+        height: 250px !important;
+        /* Altura fija para consistencia */
+    }
+
+    /* ===============================
+     AJUSTES GENERALES MÓVIL
+  ================================ */
+
+    /* Títulos más pequeños */
+    h1 {
+        font-size: 2.5rem !important;
+    }
+
+    h2 {
+        font-size: 2rem !important;
+    }
+
+    /* Hero padding */
+    .hero-content {
+        padding: 0 1.5rem;
+    }
+
+    /* Filtros en una columna */
+    .filters-card {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 1.5rem !important;
+    }
+
+    .filter-btn {
+        width: 100%;
+        margin-top: 1rem;
+    }
+}

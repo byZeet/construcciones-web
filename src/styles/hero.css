@@ -1,199 +1,398 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@400;500;700&display=swap');
-
 /* ==================================
-   HERO - CONFIGURACIÓN BASE
+   HERO - ULTRA PREMIUM REDESIGN
 ================================== */
-.hero {
-  position: relative;
-  height: 100vh;
-  min-height: 700px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000; /* Fondo de seguridad */
+
+:root {
+  --hero-bg: #0a0a0a;
+  --hero-accent: var(--tayga-accent);
+  /* Premium Champagne Cream */
+  --hero-grid: rgba(255, 255, 255, 0.1);
+  --hero-text: #ffffff;
+  --hero-text-muted: rgba(255, 255, 255, 0.7);
 }
 
-/* Fondo optimizado: Eliminamos 'fixed' para evitar lag en scroll */
-.hero-bg {
+
+
+.hero-tech {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--hero-bg);
+  color: var(--hero-text);
+  font-family: 'Inter', sans-serif;
+}
+
+.hero-pin-container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- BACKGROUND LAYER --- */
+.hero-bg-layer {
   position: absolute;
   inset: 0;
+  z-index: 1;
+}
+
+.hero-bg-image {
+  width: 100%;
+  height: 100%;
   background-image: url('/images/background-hero.jpg');
   background-size: cover;
   background-position: center;
-  z-index: 1;
-  /* Efecto de zoom sutil para dar vida sin penalizar rendimiento */
-  animation: slowZoom 20s ease-in-out infinite alternate;
-  will-change: transform;
+  filter: brightness(0.65) contrast(1.1);
 }
 
-@keyframes slowZoom {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
-}
-
-/* Capa de contraste mejorada */
-.hero-overlay {
+.hero-gradient-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
-  z-index: 2;
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.1) 40%,
+      rgba(0, 0, 0, 0.6) 100%);
 }
 
-/* ==================================
-   CONTENIDO PRINCIPAL
-================================== */
-.hero-content {
-  position: relative;
-  z-index: 3;
+/* --- GRID LAYER (Fixed) --- */
+.hero-grid-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.grid-line {
+  position: absolute;
+  background-color: var(--hero-grid);
+}
+
+.grid-line.vertical {
+  width: 1px;
+  height: 100%;
+  top: 0;
+}
+
+.v-left {
+  left: 80px;
+  border-left: 1px solid var(--hero-grid);
+  background: none;
+}
+
+.v-right {
+  right: 80px;
+  border-right: 1px solid var(--hero-grid);
+  background: none;
+}
+
+.grid-line.horizontal {
+  height: 1px;
   width: 100%;
-  max-width: 1000px;
-  padding: 0 2rem;
+  left: 0;
+}
+
+.h-top {
+  top: 120px;
+  border-top: 1px solid var(--hero-grid);
+  background: none;
+}
+
+.h-bottom {
+  bottom: 120px;
+  border-bottom: 1px solid var(--hero-grid);
+  background: none;
+}
+
+/* --- CONTENT LAYER --- */
+.hero-content-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  /* Animación suave con aceleración de hardware */
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  will-change: opacity, transform;
 }
 
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* TAYGA BACKGROUND TITLE */
+.hero-brand-title {
+  position: absolute;
+  bottom: -2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Anton', sans-serif;
+  /* Needs heavy font */
+  font-size: clamp(8rem, 30vw, 35rem);
+  line-height: 0.7;
+  color: rgba(255, 255, 255, 0.1);
+  /* Increased visibility as requested */
+  z-index: -1;
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
-.hero-eyebrow {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-  font-weight: 500;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: #ff6a2a; /* Color corporativo para resaltar */
-  margin-bottom: 1.5rem;
-}
-
-.hero-main-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(3.5rem, 10vw, 8rem);
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 2rem;
-  color: white;
-  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.hero-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.4rem);
-  font-weight: 400;
-  max-width: 700px;
-  margin: 0 auto 3rem;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
-}
-
-/* ==================================
-   BENEFICIOS (TAGS)
-================================== */
-.benefits {
+/* HERO SERVICES TOP ROW */
+.hero-services-top {
+  position: absolute;
+  top: 15vh;
+  /* Positioned clearly above */
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 4rem;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 5vw;
+  /* Wide, elegant spacing */
+  z-index: 20;
+  width: 100%;
+  pointer-events: none;
 }
 
-.benefit-item {
+.service-pill {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.7rem 1.4rem;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  /* Reducimos el blur para evitar lag en GPUs poco potentes */
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  color: white;
+  gap: 0.8rem;
+  padding: 0.5rem;
+  background: transparent;
+  /* No box */
+  border: none;
+  /* No border */
+  border-radius: 0;
+  backdrop-filter: none;
   font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.benefit-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-3px);
-  border-color: #ff6a2a;
-}
-
-/* ==================================
-   BOTÓN CTA
-================================== */
-.btn {
-  display: inline-block;
-  padding: 1.2rem 3.5rem;
-  border-radius: 50px;
-  background: #ff6a2a; /* Naranja corporativo */
-  color: white;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  /* Ultra wide spacing */
+  color: rgba(255, 255, 255, 0.6);
+  /* Muted initial state */
   text-transform: uppercase;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 20px rgba(255, 106, 42, 0.3);
-  /* Forzamos renderizado por GPU */
-  transform: translateZ(0); 
+  transition: all 0.5s ease;
+  position: relative;
 }
 
-.btn:hover {
-  background: #e55a1e;
-  transform: translateY(-3px);
-  box-shadow: 0 15px 25px rgba(255, 106, 42, 0.4);
+.service-pill:hover {
+  color: rgba(255, 255, 255, 1);
+  transform: translateY(0);
+  background: transparent;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
-/* ==================================
-   ADAPTACIÓN MÓVIL (Rendimiento Extremo)
-================================== */
+.service-pill::after {
+  /* Subtle underline on hover or active */
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0%;
+  height: 1px;
+  background: var(--hero-accent);
+  transition: all 0.4s ease;
+  transform: translateX(-50%);
+}
+
+.service-pill:hover::after {
+  width: 40%;
+}
+
+.service-dot {
+  width: 4px;
+  height: 4px;
+  background-color: var(--hero-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(var(--tayga-accent-rgb), 0.6);
+  opacity: 0.9;
+}
+
+.accent-pill {
+  color: rgba(255, 255, 255, 0.95);
+  /* Stand out more by default */
+}
+
+.accent-pill .service-icon {
+  color: var(--hero-accent);
+  font-size: 1rem;
+  /* Slightly larger checkmark */
+  filter: drop-shadow(0 0 10px rgba(var(--tayga-accent-rgb), 0.6));
+}
+
+.service-icon {
+  color: var(--hero-accent);
+  font-weight: 800;
+}
+
+
+/* EDITORIAL CENTER - MOVED UP */
+.hero-editorial-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  z-index: 15;
+  padding: 0 1rem;
+  margin-top: -18vh;
+  /* Pulling it visibly UPWARDS X2 */
+}
+
+/* CASAS QUE INSPIRAN VIDA */
+.hero-slogan {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  /* Slightly smaller max size */
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.slogan-line.highlight {
+  font-weight: 800;
+  color: #fff;
+}
+
+/* MANIFESTO */
+.hero-manifesto {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  /* Smaller tech size */
+  font-weight: 500;
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+  /* Wide spacing */
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  /* Tech aesthetic */
+}
+
+/* --- BOTTOM INFO --- */
+.tech-coord-bl {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  font-family: 'Inter', monospace;
+  font-size: 0.75rem;
+  color: var(--hero-text-muted);
+  opacity: 0.5;
+}
+
+.tech-scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  opacity: 0.6;
+}
+
+.scroll-text {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: var(--hero-text);
+}
+
+
+/* --- NEW: VERTICAL BADGE RIGHT --- */
+.hero-vertical-badge {
+  position: absolute;
+  right: 4vw;
+  bottom: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 20;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: #fff;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.vertical-line {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.vertical-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hero-accent);
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-  .hero {
-    min-height: 100vh;
-    padding-top: 20px;
-  }
-
-  .hero-bg {
-    animation: none; /* Desactivamos zoom en móvil para ahorrar batería */
-  }
-
-  .hero-main-title {
-    font-size: 3.5rem;
-  }
-
-  .benefit-item {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
-    backdrop-filter: none; /* Quitamos blur en móvil (causa mucho lag) */
-    background: rgba(255, 255, 255, 0.15);
-  }
-
-  .benefits {
-    flex-direction: column;
+  .hero-pin-container {
     align-items: center;
-    gap: 0.8rem;
+    /* Ensure center vertically */
   }
 
-  .btn {
-    width: 90%;
-    padding: 1.1rem;
+  .v-left,
+  .v-right,
+  .h-top,
+  .h-bottom {
+    display: none;
+    /* Clean up mobile view */
+  }
+
+  .hero-slogan {
+    font-size: 11vw;
+  }
+
+  .hero-manifesto {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .hero-brand-title {
+    font-size: 35vw;
+    /* Even bigger on mobile background */
+    bottom: 10%;
+    opacity: 0.05;
+  }
+
+  .tech-coord-bl {
+    display: none;
+  }
+
+  /* Adjust vertical badge for mobile */
+  .hero-vertical-badge {
+    right: 1.5rem;
+    bottom: 5vh;
   }
 }

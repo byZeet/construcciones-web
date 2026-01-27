@@ -20,7 +20,7 @@
     display: block;
     width: 60px;
     height: 3px;
-    background: #ff6a2a;
+    background: var(--tayga-accent);
     margin: 1rem auto;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .radio-card input:checked+.card-content {
-    border-color: #ff6a2a;
+    border-color: var(--tayga-accent);
     background: #fff9f6;
 }
 
@@ -118,7 +118,7 @@
 }
 
 .color-option input:checked+.swatch {
-    border-color: #ff6a2a;
+    border-color: var(--tayga-accent);
     transform: scale(1.1);
 }
 
@@ -150,7 +150,7 @@
 
 .total-box strong {
     font-size: 2rem;
-    color: #ff6a2a;
+    color: var(--tayga-accent);
 }
 
 /* DISEÑO TIPO APP PRESUPUESTO */
@@ -279,24 +279,25 @@
 }
 
 .btn-app-pdf {
-  width: 100%;
-  padding: 1rem;
-  border-radius: 50px;
-  border: 1.5px solid #1a1f36; /* Un tono más oscuro para diferenciarlo */
-  background: #1a1f36;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.2s;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 50px;
+    border: 1.5px solid #1a1f36;
+    /* Un tono más oscuro para diferenciarlo */
+    background: #1a1f36;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
 }
 
 .btn-app-pdf:hover {
-  background: #2e3552;
-  transform: translateY(-2px);
+    background: #2e3552;
+    transform: translateY(-2px);
 }
 
 @media (max-width: 992px) {
