@@ -1,0 +1,94 @@
+---
+interface Props {
+    imageBefore?: string;
+    imageAfter?: string;
+    labelBefore?: string;
+    labelAfter?: string;
+}
+
+const {
+    imageBefore = "/images/casa_3.jpg", // Fallback
+    imageAfter = "/images/img_fondo1.jpg",
+    labelBefore = "Plano 3D",
+    labelAfter = "Realidad",
+} = Astro.props;
+---
+
+<section class="img-comp-section">
+    <div class="container">
+        <header class="img-comp-header">
+            <span class="eyebrow">Realidad vs Expectativa</span>
+            <h2>Lo que ves es lo que obtienes</h2>
+        </header>
+
+        <div class="img-comp-wrapper" id="comparison-slider">
+            <!-- Image 2 (Background / "After") -->
+            <div class="img-comp-img img-comp-background">
+                <img src={imageAfter} alt="After" />
+                <span class="comp-label-float label-after">{labelAfter}</span>
+            </div>
+
+            <!-- Image 1 (Overlay / "Before") -->
+            <div class="img-comp-img img-comp-overlay" id="overlay-img">
+                <img src={imageBefore} alt="Before" />
+                <span class="comp-label-float label-before">{labelBefore}</span>
+            </div>
+
+            <!-- Handle -->
+            <div class="comp-slider-handle" id="slider-handle"></div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function initComparisons() {
+        const container = document.getElementById("comparison-slider");
+        const overlay = document.getElementById("overlay-img");
+        const handle = document.getElementById("slider-handle");
+        let clicked = false;
+
+        if (!container || !overlay || !handle) return;
+
+        function slideMove(e: any) {
+            if (!clicked) return;
+            e.preventDefault(); // Stop selection
+
+            // Get cursor x position relative to container
+            const rect = container!.getBoundingClientRect();
+            let x = (e.pageX || e.touches[0].pageX) - rect.left;
+
+            // Boundaries
+            if (x < 0) x = 0;
+            if (x > rect.width) x = rect.width;
+
+            slide(x);
+        }
+
+        function slide(x: number) {
+            overlay!.style.width = x + "px";
+            handle!.style.left = overlay!.offsetWidth + "px";
+        }
+
+        function slideFinish() {
+            clicked = false;
+        }
+
+        function slideStart(e: any) {
+            clicked = true;
+            slideMove(e); // allow click-jump
+        }
+
+        // Events
+        container.addEventListener("mousedown", slideStart);
+        container.addEventListener("touchstart", slideStart);
+
+        window.addEventListener("mouseup", slideFinish);
+        window.addEventListener("touchend", slideFinish);
+
+        window.addEventListener("mousemove", slideMove);
+        window.addEventListener("touchmove", slideMove);
+    }
+
+    // Run on load
+    initComparisons();
+</script>

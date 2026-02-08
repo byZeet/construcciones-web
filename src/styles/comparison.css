@@ -1,0 +1,138 @@
+/* src/styles/comparison.css */
+
+.comparison-section {
+    padding: 8rem 0;
+    background-color: #fff;
+}
+
+.comparison-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 5rem;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+}
+
+/* Card Styling */
+.comparison-card {
+    padding: 3rem;
+    border-radius: 1.5rem;
+    transition: transform 0.4s ease;
+}
+
+.comparison-card.traditional {
+    background-color: #f5f5f5;
+    color: #666;
+    border: 1px solid #eee;
+}
+
+.comparison-card.tayga {
+    background-color: #1a1a1a;
+    color: #fff;
+    transform: scale(1.05);
+    /* Make it pop */
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tayga .card-title {
+    color: var(--tayga-accent, #f1d498);
+}
+
+.comparison-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.comp-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tayga .comp-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comp-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+.comp-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: right;
+}
+
+.comp-value.negative {
+    color: #e57373;
+}
+
+.comp-value.positive {
+    color: #81c784;
+}
+
+.tayga .comp-value.positive {
+    color: var(--tayga-accent, #f1d498);
+}
+
+/* Vs Badge */
+.vs-badge {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--tayga-accent, #f1d498);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    z-index: 10;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .comparison-card.tayga {
+        transform: none;
+    }
+
+    .vs-badge {
+        top: 48%;
+        /* adjust for vertical stack */
+    }
+}

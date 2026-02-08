@@ -15,6 +15,9 @@ import "../styles/footer.css";
 import "../styles/presupuesto.css";
 import "../styles/simulador-presupuesto.css";
 import "../styles/testimonials.css";
+import "../styles/process-timeline.css";
+import "../styles/comparison.css";
+import "../styles/image-comparison.css";
 import "../styles/tablet.css";
 import "../styles/mobile.css";
 
@@ -35,7 +38,7 @@ const { title = "Colven Construcciones" } = Astro.props;
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
 			rel="stylesheet"
 		/>
 
@@ -49,5 +52,6 @@ const { title = "Colven Construcciones" } = Astro.props;
 			<slot />
 		</main>
 		<Footer />
+		<script src="../scripts/animations.js"></script>
 	</body>
 </html>

@@ -1,92 +1,413 @@
 /* ==============================================
-   ESTILOS ESPECÍFICOS PARA MÓVIL
-   (Max width 768px)
-============================================== */
+   ESTILOS ESPECÍFICOS PARA MÓVIL (MAX WIDTH 768px)
+   ============================================== */
 
 @media (max-width: 768px) {
 
-    /* ===============================
-     CARROUSELS HORIZONTALES (Manuales)
-  ================================ */
-    /* Aplicar a Modelos y Productos Top */
-    .models-grid,
-    .top-products-grid {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        gap: 1.5rem !important;
-        padding-bottom: 2rem !important;
-        /* Espacio para scroll */
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-
-        /* Snap para que se pare en caros */
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-
-        /* Reset de Grid */
-        grid-template-columns: none !important;
+    /* --- BASIC RESETS & TYPOGRAPHY --- */
+    html {
+        font-size: 14px;
+        /* Slight base reduction */
     }
 
-    /* Ocultar barra de scroll para limpieza visual */
-    .models-grid::-webkit-scrollbar,
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2.2rem !important;
+        line-height: 1.1 !important;
+    }
+
+    h2 {
+        font-size: 1.8rem !important;
+    }
+
+    h3 {
+        font-size: 1.4rem !important;
+    }
+
+    .container {
+        padding-left: 1.2rem !important;
+        padding-right: 1.2rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* --- PREMIUM FLOAT NAVBAR (Mobile) --- */
+
+    /* 1. Main Container = The Pill */
+    .navbar-segmented-top {
+        position: fixed !important;
+        top: 1.2rem !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 92% !important;
+        height: 64px !important;
+        padding: 0 1rem !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        gap: 0 !important;
+
+        /* Glassmorphism Look */
+        background: rgba(8, 8, 8, 0.9) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 100px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+
+        box-sizing: border-box !important;
+        z-index: 1000 !important;
+    }
+
+    /* Hide unwanted elements */
+    .nav-info-text,
+    .links-segment,
+    .cta-segment {
+        display: none !important;
+    }
+
+    /* 2. Left: Burger (Transparent) */
+    #menu-toggle {
+        display: flex !important;
+        width: 44px !important;
+        height: 44px !important;
+        align-items: center;
+        justify-content: center;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 50% !important;
+        color: white !important;
+        /* Subtle touch feedback */
+    }
+
+    #menu-toggle:active {
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* 3. Center: Logo (Fluid) */
+    .logo-segment {
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: 0 !important;
+        height: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        flex-grow: 0 !important;
+
+        background: transparent !important;
+        border: none !important;
+        backdrop-filter: none !important;
+    }
+
+    .logo-segment img {
+        height: 100px !important;
+        /* Perfect visual size */
+        width: auto;
+        object-fit: contain;
+        transform: none !important;
+    }
+
+    /* 4. Right: Icons (Search/Heart) */
+    .icons-segment {
+        display: flex !important;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1.2rem !important;
+        height: 100% !important;
+        padding-right: 0.5rem !important;
+        min-width: auto !important;
+        width: auto !important;
+
+        background: transparent !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        border-radius: 0 !important;
+    }
+
+    .icons-segment a,
+    .icons-segment button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff !important;
+        opacity: 0.9;
+        font-size: 1.2rem;
+        /* Icon size */
+        background: transparent !important;
+        border: none !important;
+        padding: 5px;
+    }
+
+    .icons-segment .icon-tabler-shopping-cart {
+        display: none !important;
+    }
+
+
+
+    /* Overlay Menu adjustments */
+    .overlay-content {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 4rem;
+        gap: 2rem;
+    }
+
+    .overlay-main-links {
+        font-size: 2rem;
+    }
+
+    /* --- HERO --- */
+    .hero {
+        height: 90vh !important;
+        /* Mobile height */
+        min-height: 500px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem !important;
+        margin-bottom: 1rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem !important;
+        max-width: 100%;
+    }
+
+    .hero-bg {
+        object-position: center;
+    }
+
+    /* BACKGROUND TITLE (TAYGA) - MORE VISIBLE ON MOBILE */
+    .hero-brand-title {
+        font-size: 30vw !important;
+        bottom: 15% !important;
+        /* Position in the empty space */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        opacity: 1 !important;
+        /* Match PC (0.13 alpha color) */
+        z-index: 1 !important;
+        /* Ensure it's above bg but below text */
+        display: block !important;
+        width: 100%;
+        text-align: center;
+        pointer-events: none;
+    }
+
+    /* --- HOME: PHILOSOPHY --- */
+    .philosophy-grid {
+        display: flex !important;
+        flex-direction: column-reverse;
+        /* Image on top usually better, or text on top. Stacked. */
+        gap: 2rem;
+    }
+
+    .philosophy-media {
+        height: 300px;
+        width: 100%;
+    }
+
+    /* --- HOME: MODELS GRID --- */
+    .models-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+
+    .model-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .model-card img {
+        height: 250px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    /* --- HOME: WHY US --- */
+    .why-us-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+
+    /* --- HOME: TOP PRODUCTS --- */
+    /* Maintain carousel on mobile as requested, but cleaner */
+    .top-products-grid {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        gap: 1rem !important;
+        padding-bottom: 1.5rem !important;
+        /* No scrollbar */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
     .top-products-grid::-webkit-scrollbar {
         display: none;
     }
 
-    .models-grid,
-    .top-products-grid {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    /* TARJETAS EN CARROUSEL */
-    .model-card,
-    .product-card {
-        flex: 0 0 85vw !important;
-        /* 85% del ancho de pantalla */
+    .top-products-grid .product-card {
+        flex: 0 0 85%;
         scroll-snap-align: center;
-        width: auto !important;
-        /* Reset de anchos fijos si los hubiera */
-        max-width: 320px;
-        /* Que no sean gigantes si el móvil es ancho */
-        margin: 0 auto;
-        /* Centrado si es necesario */
+        min-width: 280px;
     }
 
-    /* Asegurar que las imágenes cubran */
-    .model-card img {
-        height: 250px !important;
-        /* Altura fija para consistencia */
-    }
-
-    /* ===============================
-     AJUSTES GENERALES MÓVIL
-  ================================ */
-
-    /* Títulos más pequeños */
-    h1 {
-        font-size: 2.5rem !important;
-    }
-
-    h2 {
-        font-size: 2rem !important;
-    }
-
-    /* Hero padding */
-    .hero-content {
-        padding: 0 1.5rem;
-    }
-
-    /* Filtros en una columna */
-    .filters-card {
+    /* --- COMPARISON & TIMELINE & IMAGE SLIDER --- */
+    .comparison-grid {
         grid-template-columns: 1fr !important;
-        gap: 1rem !important;
+    }
+
+    /* Timeline usually needs stacking */
+    .timeline-container {
+        flex-direction: column;
+    }
+
+    .img-comp-wrapper {
+        height: 300px !important;
+        max-width: 100%;
+    }
+
+    .img-comp-img img {
+        height: 300px !important;
+        width: 100% !important;
+        /* Force fit container */
+        object-fit: cover;
+    }
+
+    /* --- BUDGET SECTION --- */
+    .budget-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .budget-form-wrapper {
         padding: 1.5rem !important;
     }
 
-    .filter-btn {
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* --- TESTIMONIALS --- */
+    .testimonials-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* --- FOOTER --- */
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 3rem !important;
+        text-align: center;
+    }
+
+    .footer-col {
+        align-items: center !important;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* --- MODEL DETAIL PAGE --- */
+    .model-detail-container {
+        padding-top: 80px !important;
+        /* Less padding for navbar */
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .left-main-col {
         width: 100%;
-        margin-top: 1rem;
+    }
+
+    .main-view-container {
+        height: 300px !important;
+    }
+
+    .thumbnails-wrapper {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 5px;
+    }
+
+    .thumbnail-row {
+        flex-wrap: nowrap;
+    }
+
+    /* Specs Table */
+    .specs-section {
+        margin-top: 2rem;
+    }
+
+    .specs-table td {
+        padding: 0.8rem 0 !important;
+        font-size: 0.95rem;
+    }
+
+    /* Info Column */
+    .product-info-section {
+        width: 100%;
+    }
+
+    .sticky-wrapper {
+        position: relative !important;
+        top: 0 !important;
+        padding: 1.5rem !important;
+        /* Smaller padding */
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+        background: #fff;
+    }
+
+    h1.model-title {
+        font-size: 2rem !important;
+    }
+
+    .price-block .main-price {
+        font-size: 2.5rem !important;
+    }
+
+    .actions-utility-row {
+        flex-wrap: wrap;
+        /* Buttons might need to stack or wrap */
+    }
+
+    .btn-compare-new {
+        flex-grow: 1;
+        font-size: 0.8rem !important;
+    }
+
+    .top-icons-row {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    /* Similar models carousel on detail page */
+    .rec-card {
+        flex: 0 0 80% !important;
+        min-width: 260px;
     }
 }

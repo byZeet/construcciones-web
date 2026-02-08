@@ -1,6 +1,60 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
+import ComparisonSection from "../components/ComparisonSection.astro";
+import ProcessTimeline from "../components/ProcessTimeline.astro";
+import ImageComparison from "../components/ImageComparison.astro";
+
+// Data & Node Imports
+import { getModelData } from "../data/models";
+import fs from "node:fs";
+import path from "node:path";
+
+// Logic to get featured models
+const imagesDir = path.join(process.cwd(), "public/images/imagenes_casas");
+
+// Helper to get image
+const getModelImage = (id: string) => {
+  let image = "/images/img_fondo1.jpg"; // Fallback
+  const modelPath = path.join(imagesDir, id);
+
+  if (fs.existsSync(modelPath)) {
+    const files = fs.readdirSync(modelPath).filter((f) => !f.startsWith("."));
+    const mainImg =
+      files.find(
+        (f) =>
+          f.toLowerCase().startsWith("1-") || f.toLowerCase().includes("main"),
+      ) || files[0];
+
+    if (mainImg) {
+      image = `/images/imagenes_casas/${id}/${mainImg}`;
+    }
+  }
+  return image;
+};
+
+// Logic to get featured models
+const featuredModelIds = ["Amazon", "Sinai", "Milan", "Sofia"];
+
+const featuredModels = featuredModelIds.map((id) => {
+  const data = getModelData(id);
+  // Clean price string for display
+  const displayPrice = data.specs.price.replace(/Desde\s+/i, "");
+
+  return {
+    ...data,
+    price: displayPrice,
+    image: getModelImage(id),
+  };
+});
+
+// Logic to get category images
+const categoryImages = {
+  modular: getModelImage("Amazon"),
+  familiar: getModelImage("Milan"),
+  alpina: getModelImage("Ararat"),
+  studio: getModelImage("Mini Giza"),
+};
 ---
 
 <Layout title="Casas prefabricadas y modulares | Colven Construcciones">
@@ -38,7 +92,7 @@ import Hero from "../components/Hero.astro";
       </div>
     </section>
 
-    <!-- MODELOS EXCLUSIVOS (FUERA) -->
+    <!-- MODELOS EXCLUSIVOS -->
     <section class="models">
       <div class="container">
         <div class="models-header">
@@ -48,78 +102,30 @@ import Hero from "../components/Hero.astro";
         </div>
 
         <div class="models-grid">
-          <article class="model-card">
-            <img src="/images/img_fondo1.jpg" alt="Serie modular" />
+          <a href="/modelos/Amazon" class="model-card">
+            <img src={categoryImages.modular} alt="Serie modular" />
             <h3>Serie Modular</h3>
             <span>80m² – 150m²</span>
-          </article>
+          </a>
 
-          <article class="model-card">
-            <img src="/images/img_fondo1.jpg" alt="Residencia familiar" />
+          <a href="/modelos/Milan" class="model-card">
+            <img src={categoryImages.familiar} alt="Residencia familiar" />
             <h3>Residencia Familiar</h3>
             <span>140m² – 280m²</span>
-          </article>
+          </a>
 
-          <article class="model-card">
-            <img src="/images/img_fondo1.jpg" alt="Cabaña alpina" />
+          <a href="/modelos/Ararat" class="model-card">
+            <img src={categoryImages.alpina} alt="Cabaña alpina" />
             <h3>Cabaña Alpina</h3>
             <span>45m² – 90m²</span>
-          </article>
+          </a>
 
-          <article class="model-card">
-            <img src="/images/img_fondo1.jpg" alt="Garden Studio" />
+          <a href="/modelos/Mini Giza" class="model-card">
+            <img src={categoryImages.studio} alt="Garden Studio" />
             <h3>Garden Studio</h3>
             <span>25m² – 60m²</span>
-          </article>
+          </a>
         </div>
-      </div>
-    </section>
-
-    <!-- FILTROS -->
-    <section class="model-filters">
-      <div class="container">
-        <form class="filters-card">
-          <div class="filter-group">
-            <label>Categoría</label>
-            <select>
-              <option>Todas las categorías</option>
-              <option>Serie Modular</option>
-              <option>Residencia Familiar</option>
-              <option>Cabaña Alpina</option>
-              <option>Garden Studio</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Superficie construida, m²</label>
-            <div class="range-inputs">
-              <input type="number" placeholder="Desde" />
-              <span class="dash">—</span>
-              <input type="number" placeholder="Hasta" />
-            </div>
-          </div>
-
-          <div class="filter-group">
-            <label>Espacios</label>
-            <select>
-              <option>Cualquiera</option>
-              <option>1</option>
-              <option>2</option>
-              <option>3+</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Plantas</label>
-            <select>
-              <option>Todas</option>
-              <option>1</option>
-              <option>2</option>
-            </select>
-          </div>
-
-          <button type="submit" class="filter-btn"> Seleccionar </button>
-        </form>
       </div>
     </section>
 
@@ -181,104 +187,99 @@ import Hero from "../components/Hero.astro";
 
     <section class="top-products">
       <div class="container">
-        <header class="top-products-header">
+        <header class="top-products-header animate-on-scroll">
           <h2>Nuestros productos top</h2>
           <span class="underline"></span>
         </header>
 
-        <div class="top-products-grid">
-          <!-- CARD -->
-          <article class="product-card">
-            <div class="product-media">
-              <span class="badge-top">TOP</span>
-              <span class="badge-buy">Comprar en línea</span>
+        {/* TOP PRODUCTS SECTION DYNAMIC */}
+        <div class="top-products-grid animate-on-scroll">
+          {
+            featuredModels.map((model) => (
+              <article class="product-card">
+                <div class="product-media">
+                  <span class="badge-top">TOP</span>
 
-              <button class="fav-btn" aria-label="Favorito">♡</button>
+                  <button class="fav-btn" aria-label="Favorito">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </button>
 
-              <img src="/images/img_fondo1.jpg" alt="Mini casa Ladoga" />
-            </div>
+                  <a href={`/modelos/${model.id}`} class="img-link">
+                    <img
+                      src={model.image}
+                      alt={`Modelo ${model.name}`}
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
 
-            <h3>Mini casa de madera Ladoga</h3>
+                <h3>{model.name}</h3>
 
-            <ul class="product-features">
-              <li>🏠 1 zona</li>
-              <li>📐 25 m²</li>
-              <li>🪵 34 mm</li>
-            </ul>
+                <ul class="product-features">
+                  <li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    >
+                      <path d="M3 21h18" />
+                      <path d="M5 21V7l8-4 8 4v14" />
+                      <path d="M17 21v-8H7v8" />
+                    </svg>{" "}
+                    {model.specs.rooms} estancias
+                  </li>
+                  <li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    >
+                      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+                    </svg>{" "}
+                    {model.specs.surface}
+                  </li>
+                </ul>
 
-            <p class="price">Precio desde <strong>7.703 €</strong></p>
+                <p class="price">
+                  Precio desde <strong>{model.price}</strong>
+                </p>
 
-            <a href="#" class="btn-outline">Más información</a>
-          </article>
-
-          <!-- DUPLICA -->
-          <article class="product-card">
-            <div class="product-media">
-              <span class="badge-top">TOP</span>
-              <span class="badge-buy">Comprar en línea</span>
-              <button class="fav-btn">♡</button>
-              <img src="/images/img_fondo1.jpg" alt="Mini casa Sanabria" />
-            </div>
-
-            <h3>Mini casa de madera Sanabria</h3>
-
-            <ul class="product-features">
-              <li>🏠 1 zona</li>
-              <li>📐 21 m²</li>
-              <li>🪵 34 mm</li>
-            </ul>
-
-            <p class="price">Precio desde <strong>8.071 €</strong></p>
-
-            <a href="#" class="btn-outline">Más información</a>
-          </article>
-
-          <!-- DUPLICA -->
-          <article class="product-card">
-            <div class="product-media">
-              <span class="badge-top">TOP</span>
-              <span class="badge-buy">Comprar en línea</span>
-              <button class="fav-btn">♡</button>
-              <img src="/images/img_fondo1.jpg" alt="Mini casa Balaton" />
-            </div>
-
-            <h3>Mini casa de madera Balaton</h3>
-
-            <ul class="product-features">
-              <li>🏠 1 zona</li>
-              <li>📐 14 m²</li>
-              <li>🪵 34 mm</li>
-            </ul>
-
-            <p class="price">Precio desde <strong>6.184 €</strong></p>
-
-            <a href="#" class="btn-outline">Más información</a>
-          </article>
-
-          <!-- DUPLICA -->
-          <article class="product-card">
-            <div class="product-media">
-              <span class="badge-top">TOP</span>
-              <span class="badge-buy">Comprar en línea</span>
-              <button class="fav-btn">♡</button>
-              <img src="/images/img_fondo1.jpg" alt="Mini casa Escur" />
-            </div>
-
-            <h3>Mini casa de madera Escur</h3>
-
-            <ul class="product-features">
-              <li>🏠 1 zona</li>
-              <li>📐 21 m²</li>
-              <li>🪵 34 mm</li>
-            </ul>
-
-            <p class="price">Precio desde <strong>7.970 €</strong></p>
-
-            <a href="#" class="btn-outline">Más información</a>
-          </article>
+                <a href={`/modelos/${model.id}`} class="btn-outline">
+                  Más información
+                </a>
+              </article>
+            ))
+          }
         </div>
       </div>
     </section>
+
+    <!-- NUEVO: COMPARATIVA -->
+    <ComparisonSection />
+
+    <!-- NUEVO: TIMELINE PROCESO -->
+    <ProcessTimeline />
+
+    <!-- NUEVO: SLIDER IMAGEN -->
+    <ImageComparison />
 
     <section class="budget-section">
       <div class="container">

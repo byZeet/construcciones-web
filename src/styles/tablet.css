@@ -1,31 +1,82 @@
 /* ==============================================
-   ESTILOS ESPECÍFICOS PARA TABLET
-   (Aprox 768px - 1024px)
-============================================== */
+   ESTILOS ESPECÍFICOS PARA TABLET (769px - 1024px)
+   ============================================== */
 
-@media (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
 
-    /* ===============================
-     MODELOS EXCLUSIVOS (Tablet)
-  ================================ */
-    .models-grid {
-        display: flex;
-        /* Convertir grid a flex para carousel si se desea en tablet también? Usuario dijo "movil y tablet... Por ejemplo: ... movil" */
-        /* El usuario especificó "en movil" para el carrousel, pero dijo "adaptado a movil y tablet".
-       Para tablet, a menudo 2 columnas (grid) es mejor que un carrousel gigante.
-       Mantendré el grid de 2 columnas original para tablet si se ve bien, 
-       pero el usuario pidió "adaptado". Voy a asegurar márgenes y tamaños.
-    */
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1.5rem;
-        padding: 0 1rem;
+    /* --- NAVBAR: Force Hamburger on Tablet --- */
+    /* The desktop navbar is too wide for tablets */
+    .links-segment,
+    .nav-info-text {
+        display: none !important;
     }
 
-    /* ===============================
-     PRODUCTOS TOP (Tablet)
-  ================================ */
-    .top-products-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
+    .navbar-segmented-top {
+        padding: 0.5rem 1rem;
+        width: 95%;
+    }
+
+    /* Ensure menu toggle is visible */
+    #menu-toggle {
+        display: flex !important;
+    }
+
+    .logo-segment {
+        flex-grow: 1;
+        justify-content: center;
+        border-right: none !important;
+    }
+
+    /* --- HERO --- */
+    .hero-content h1 {
+        font-size: 3.5rem !important;
+    }
+
+    /* --- GRIDS: 2 COLUMNS --- */
+    /* Homepage Models */
+    .models-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
         gap: 1.5rem;
+    }
+
+    /* Top Products (Carousel is OK, but maybe 2 cols grid is better for tablet?) 
+       User wanted "adaptado". I'll stick to a clean grid for tablet.
+    */
+    .top-products-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.5rem;
+        overflow: visible !important;
+        /* Disable mobile carousel behavior */
+    }
+
+    .product-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+    }
+
+    /* Why Us / Testimonials */
+    .why-us-grid,
+    .testimonials-grid,
+    .footer-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    /* --- MODEL DETAIL PAGE (TABLET) --- */
+    .product-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 2rem;
+    }
+
+    .main-view-container {
+        height: 400px;
+    }
+
+    /* Keep sticky behavior on tablet as there is vertical space */
+    .sticky-wrapper {
+        position: sticky !important;
+        top: 100px;
     }
 }

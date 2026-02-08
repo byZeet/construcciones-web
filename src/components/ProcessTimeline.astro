@@ -1,0 +1,105 @@
+---
+const steps = [
+    {
+        id: 1,
+        title: "Diseño y Personalización",
+        text: "Nuestro equipo de arquitectos adapta cada modelo a tus necesidades específicas, analizando la topografía y orientación de tu parcela para maximizar la eficiencia energética.",
+        image: "/images/img_fondo1.jpg",
+    },
+    {
+        id: 2,
+        title: "Fabricación Off-Site",
+        text: "Construimos tu hogar en nuestras instalaciones bajo estrictos controles de calidad. Este proceso reduce los tiempos de ejecución en un 60% y elimina imprevistos climáticos.",
+        image: "/images/casa_1.jpg",
+    },
+    {
+        id: 3,
+        title: "Transporte y Logística",
+        text: "Coordinamos el traslado de los módulos prefabricados hasta tu terreno con precisión milimétrica, asegurando que cada pieza llegue en perfecto estado.",
+        image: "/images/casa_2.jpg",
+    },
+    {
+        id: 4,
+        title: "Montaje Express",
+        text: "En tiempo récord, ensamblamos tu vivienda in situ. En pocos días pasas de tener un terreno vacío a disfrutar de una casa de diseño completamente terminada.",
+        image: "/images/casa_3.jpg",
+    },
+];
+---
+
+<section class="process-section">
+    <div class="container">
+        <header class="process-header">
+            <span class="eyebrow">Nuestro Método</span>
+            <h2>El camino hacia tu hogar</h2>
+            <p>Un proceso industrializado, preciso y transparente.</p>
+        </header>
+
+        <div class="process-container">
+            <!-- Controls -->
+            <div class="process-steps">
+                {
+                    steps.map((step, index) => (
+                        <button
+                            class={`process-step-btn ${index === 0 ? "active" : ""}`}
+                            data-target={step.id}
+                            onclick={`activateStep(${step.id})`}
+                            aria-label={`Ver paso ${step.id}: ${step.title}`}
+                        >
+                            <span class="step-number">PASO 0{step.id}</span>
+                            <span class="step-title">{step.title}</span>
+                        </button>
+                    ))
+                }
+            </div>
+
+            <!-- Display -->
+            <div class="process-content-wrapper">
+                {
+                    steps.map((step, index) => (
+                        <div
+                            class={`process-content-card ${index === 0 ? "active" : ""}`}
+                            id={`step-content-${step.id}`}
+                        >
+                            <div class="process-overlay" />
+                            <img
+                                src={step.image}
+                                alt={step.title}
+                                class="process-bg-img"
+                                loading="lazy"
+                            />
+                            <div class="card-text">
+                                <h3>{step.title}</h3>
+                                <p>{step.text}</p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Simple vanilla JS for tabs logic
+    const buttons = document.querySelectorAll(".process-step-btn");
+    const cards = document.querySelectorAll(".process-content-card");
+
+    buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            // 1. Remove active from all
+            buttons.forEach((b) => b.classList.remove("active"));
+            cards.forEach((c) => c.classList.remove("active"));
+
+            // 2. Add active to clicked
+            btn.classList.add("active");
+
+            // 3. Find and activate target card
+            const targetId = btn.getAttribute("data-target");
+            const targetCard = document.getElementById(
+                `step-content-${targetId}`,
+            );
+            if (targetCard) targetCard.classList.add("active");
+        });
+    });
+</script>

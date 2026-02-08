@@ -1,0 +1,888 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getModelData } from "../../data/models";
+import "../../styles/model-detail.css";
+import fs from "node:fs";
+import path from "node:path";
+
+export async function getStaticPaths() {
+    const imagesDir = path.join(process.cwd(), "public/images/imagenes_casas");
+
+    if (!fs.existsSync(imagesDir)) {
+        return [];
+    }
+
+    const modelFolders = fs.readdirSync(imagesDir).filter((file) => {
+        return fs.statSync(path.join(imagesDir, file)).isDirectory();
+    });
+
+    return modelFolders.map((folder) => {
+        const modelPath = path.join(imagesDir, folder);
+        const files = fs
+            .readdirSync(modelPath)
+            .filter((f) => !f.startsWith("."));
+
+        const mainImage =
+            files.find(
+                (f) =>
+                    f.toLowerCase().startsWith("1-") ||
+                    f.toLowerCase().includes("main"),
+            ) || files[0];
+        const plan3d = files.find(
+            (f) => f.includes("3D") || f.includes("plano"),
+        );
+        const secondaryImages = files.filter(
+            (f) => f !== mainImage && f !== plan3d,
+        );
+
+        return {
+            params: { id: folder },
+            props: {
+                images: {
+                    main: `/images/imagenes_casas/${folder}/${mainImage}`,
+                    plan: plan3d
+                        ? `/images/imagenes_casas/${folder}/${plan3d}`
+                        : null,
+                    gallery: secondaryImages.map(
+                        (f) => `/images/imagenes_casas/${folder}/${f}`,
+                    ),
+                },
+            },
+        };
+    });
+}
+
+const { id } = Astro.params;
+const { images } = Astro.props;
+const data = getModelData(id || "Unknown");
+const { name, specs } = data;
+
+// Get Recommendations
+const numericPrice = parseInt(data.specs.price.replace(/\D/g, "")) || 0;
+
+interface RecommendedModel {
+    id: string;
+    name: string;
+    specs: any;
+    price: string;
+    image: string;
+}
+
+const imagesDir = path.join(process.cwd(), "public/images/imagenes_casas");
+let recommendedModels: RecommendedModel[] = [];
+if (fs.existsSync(imagesDir)) {
+    const allModels = fs.readdirSync(imagesDir).filter((f) => {
+        return fs.statSync(path.join(imagesDir, f)).isDirectory() && f !== id;
+    });
+
+    recommendedModels = allModels
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 10)
+        .map((folder) => {
+            const mData = getModelData(folder);
+            const mPath = path.join(imagesDir, folder);
+            const mFiles = fs
+                .readdirSync(mPath)
+                .filter((f) => !f.startsWith("."));
+            const mImg =
+                mFiles.find(
+                    (f) =>
+                        f.toLowerCase().startsWith("1-") ||
+                        f.toLowerCase().includes("main"),
+                ) || mFiles[0];
+
+            return {
+                id: folder,
+                name: mData.name,
+                specs: mData.specs,
+                price: mData.specs.price || "Consultar",
+                image: `/images/imagenes_casas/${folder}/${mImg}`,
+            };
+        });
+}
+---
+
+<Layout title={`${name} | Detalles del Modelo`}>
+    <div class="model-detail-container">
+        <div class="product-grid">
+            <!-- LEFT COLUMN -->
+            <div class="left-main-col">
+                <div class="image-gallery-section">
+                    <div class="main-view-container">
+                        <img
+                            src={images.main}
+                            alt={`Fachada principal ${name}`}
+                            class="main-image"
+                            id="main-display"
+                        />
+                    </div>
+
+                    <div class="thumbnails-wrapper">
+                        <button
+                            class="slider-arrow"
+                            id="slide-left"
+                            aria-label="Anterior"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                ><path d="M15 18l-6-6 6-6"></path></svg
+                            >
+                        </button>
+
+                        <div class="thumbnail-row" id="thumb-row">
+                            <button
+                                class="thumb-btn active-thumb"
+                                data-src={images.main}
+                                onclick={`changeImage(this, '${images.main}')`}
+                            >
+                                <img src={images.main} alt="Main view" />
+                            </button>
+                            {
+                                images.gallery.map((img) => (
+                                    <button
+                                        class="thumb-btn"
+                                        data-src={img}
+                                        onclick={`changeImage(this, '${img}')`}
+                                    >
+                                        <img src={img} alt="Detail view" />
+                                    </button>
+                                ))
+                            }
+                            {
+                                images.plan && (
+                                    <button
+                                        class="thumb-btn"
+                                        data-src={images.plan}
+                                        onclick={`changeImage(this, '${images.plan}')`}
+                                    >
+                                        <img src={images.plan} alt="Plan 3D" />
+                                    </button>
+                                )
+                            }
+                        </div>
+
+                        <button
+                            class="slider-arrow"
+                            id="slide-right"
+                            aria-label="Siguiente"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                ><path d="M9 18l6-6-6-6"></path></svg
+                            >
+                        </button>
+                    </div>
+                </div>
+
+                <div class="specs-section">
+                    <h3 class="specs-title">Especificaciones técnicas</h3>
+                    <table class="specs-table">
+                        <tbody>
+                            <tr>
+                                <td style="width: 50px;"
+                                    ><svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        ><path d="M3 21h18"></path><path
+                                            d="M5 21V7l8-4 8 4v14"></path><path
+                                            d="M17 21v-8H7v8"></path></svg
+                                    ></td
+                                >
+                                <td>Superficie construida</td>
+                                <td align="right"
+                                    ><strong>{specs.surface}</strong></td
+                                >
+                            </tr>
+                            <tr>
+                                <td
+                                    ><svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        ><rect
+                                            x="4"
+                                            y="2"
+                                            width="16"
+                                            height="20"
+                                            rx="2"
+                                            ry="2"></rect><line
+                                            x1="12"
+                                            y1="18"
+                                            x2="12.01"
+                                            y2="18"></line></svg
+                                    ></td
+                                >
+                                <td>Superficie habitable</td>
+                                <td align="right"
+                                    ><strong
+                                        >{parseInt(specs.surface) * 0.85} m²</strong
+                                    ></td
+                                >
+                            </tr>
+                            <tr>
+                                <td
+                                    ><svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        ><path
+                                            d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"
+                                        ></path></svg
+                                    ></td
+                                >
+                                <td>Nº de espacios</td>
+                                <td align="right"
+                                    ><strong>{specs.rooms}</strong></td
+                                >
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (Sticky & Clean) -->
+            <div class="product-info-section">
+                <div class="sticky-wrapper">
+                    <h1 class="model-title">
+                        {name.replace("Modelo ", "").toUpperCase()}
+                    </h1>
+
+                    <div class="top-icons-row">
+                        <span
+                            ><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                style="vertical-align:middle; margin-right:5px;"
+                                ><path d="M3 21h18"></path><path
+                                    d="M5 21V7l8-4 8 4v14"></path><path
+                                    d="M17 21v-8H7v8"></path></svg
+                            >
+                            {specs.rooms} zonas</span
+                        >
+                        <span
+                            ><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                style="vertical-align:middle; margin-right:5px;"
+                                ><rect
+                                    x="4"
+                                    y="2"
+                                    width="16"
+                                    height="20"
+                                    rx="2"
+                                    ry="2"></rect></svg
+                            >
+                            {specs.surface}</span
+                        >
+                        <span
+                            ><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                style="vertical-align:middle; margin-right:5px;"
+                                ><path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                                ></path></svg
+                            > 124 mm</span
+                        >
+                    </div>
+
+                    <div class="price-block">
+                        <span
+                            class="main-price"
+                            id="dynamic-price"
+                            data-base-price={numericPrice}
+                        >
+                            {numericPrice.toLocaleString("es-ES")}
+                            <small style="font-size:1.5rem">€</small></span
+                        >
+                        <div class="price-subtitle">Precio base estimado</div>
+                    </div>
+
+                    <!-- NEW ACTIONS: Favorite + Compare -->
+                    <div class="actions-utility-row">
+                        <button class="btn-favorite" title="Añadir a favoritos">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                ></path></svg
+                            >
+                        </button>
+                        <button class="btn-compare-new">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path d="M12 3v18"></path><path d="M3 12h18"
+                                ></path><rect
+                                    x="2"
+                                    y="5"
+                                    width="20"
+                                    height="14"
+                                    rx="2"></rect></svg
+                            >
+                            COMPARAR
+                        </button>
+                    </div>
+
+                    <div class="options-container">
+                        <h4>Configura tu Casa</h4>
+
+                        <!-- Grosor -->
+                        <div class="option-group-item">
+                            <label class="option-label-sm"
+                                >Grosor de las paredes</label
+                            >
+                            <div class="select-wrapper">
+                                <select
+                                    id="wall-thickness"
+                                    class="premium-select"
+                                >
+                                    <option
+                                        value="0"
+                                        data-label="44mm (Estándar)"
+                                        >44mm (Estándar) - Incluido</option
+                                    >
+                                    <option
+                                        value="2500"
+                                        data-label="66mm (Reforzado)"
+                                        >66mm (Reforzado) +2.500€</option
+                                    >
+                                    <option
+                                        value="4500"
+                                        data-label="90mm (Premium)"
+                                        >90mm (Premium) +4.500€</option
+                                    >
+                                    <option
+                                        value="6000"
+                                        data-label="120mm (Siberia)"
+                                        >120mm (Siberia) +6.000€</option
+                                    >
+                                </select>
+                                <div class="select-arrow">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        ><path d="M6 9l6 6 6-6"></path></svg
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aislamiento -->
+                        <div class="option-group-item">
+                            <label class="option-label-sm">Aislamiento</label>
+                            <div class="select-wrapper">
+                                <select id="insulation" class="premium-select">
+                                    <option
+                                        value="0"
+                                        data-label="Sin Aislamiento"
+                                        >Sin Aislamiento - Incluido</option
+                                    >
+                                    <option value="1200" data-label="Techo"
+                                        >Techo +1.200€</option
+                                    >
+                                    <option
+                                        value="2200"
+                                        data-label="Techo y Suelo"
+                                        >Techo y Suelo +2.200€</option
+                                    >
+                                    <option value="4000" data-label="Completo"
+                                        >Completo (Paredes, Techo, Suelo)
+                                        +4.000€</option
+                                    >
+                                </select>
+                                <div class="select-arrow">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        ><path d="M6 9l6 6 6-6"></path></svg
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ventanas -->
+                        <div class="option-group-item">
+                            <label class="option-label-sm"
+                                >Tipo de Ventanas</label
+                            >
+                            <div class="select-wrapper">
+                                <select id="windows" class="premium-select">
+                                    <option value="0" data-label="PVC Blanco"
+                                        >PVC Blanco - Incluido</option
+                                    >
+                                    <option value="800" data-label="PVC Color"
+                                        >PVC Color +800€</option
+                                    >
+                                    <option
+                                        value="1500"
+                                        data-label="Aluminio RPT"
+                                        >Aluminio RPT +1.500€</option
+                                    >
+                                </select>
+                                <div class="select-arrow">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        ><path d="M6 9l6 6 6-6"></path></svg
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div
+                        class="primary-cta-container"
+                        style="display: flex; flex-direction: column; gap: 10px;"
+                    >
+                        <button
+                            id="whatsapp-btn"
+                            class="btn-whatsapp"
+                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background-color: #25D366; color: white; padding: 12px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s;"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path
+                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                                ></path></svg
+                            >
+                            Consultar por WhatsApp
+                        </button>
+
+                        <button
+                            id="pdf-btn"
+                            class="btn-pdf"
+                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background-color: #333; color: white; padding: 12px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s;"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path
+                                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                ></path><polyline points="14 2 14 8 20 8"
+                                ></polyline><line x1="16" y1="13" x2="8" y2="13"
+                                ></line><line x1="16" y1="17" x2="8" y2="17"
+                                ></line><polyline points="10 9 9 9 8 9"
+                                ></polyline></svg
+                            >
+                            Descargar Presupuesto PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Similar Models Carousel -->
+        <section class="similar-section">
+            <h2 class="section-title">CASAS SIMILARES</h2>
+
+            <div class="carousel-container">
+                <button class="carousel-nav" id="rec-prev">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M15 18l-6-6 6-6"></path></svg
+                    >
+                </button>
+
+                <div class="rec-carousel-track" id="rec-track">
+                    {
+                        recommendedModels.map((rec) => (
+                            <a href={`/modelos/${rec.id}`} class="rec-card">
+                                <div class="rec-image-wrapper">
+                                    <img
+                                        src={rec.image}
+                                        alt={rec.name}
+                                        loading="lazy"
+                                    />
+                                    <div class="rec-overlay-title">
+                                        {rec.name.replace("Modelo ", "")}
+                                    </div>
+                                </div>
+                                <div class="rec-content">
+                                    <div class="rec-specs-row">
+                                        <span class="rec-spec-item">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            >
+                                                <>
+                                                    <path d="M3 21h18" />
+                                                    <path d="M5 21V7l8-4 8 4v14" />
+                                                    <path d="M17 21v-8H7v8" />
+                                                </>
+                                            </svg>
+                                            {rec.specs.rooms}
+                                        </span>
+                                        <span class="rec-spec-item">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            >
+                                                <rect
+                                                    x="4"
+                                                    y="2"
+                                                    width="16"
+                                                    height="20"
+                                                    rx="2"
+                                                    ry="2"
+                                                />
+                                            </svg>
+                                            {rec.specs.surface}
+                                        </span>
+                                    </div>
+                                    <div class="rec-price">
+                                        Precio desde {rec.price}
+                                    </div>
+                                    <span class="rec-btn-info">
+                                        MÁS INFORMACIÓN
+                                    </span>
+                                </div>
+                            </a>
+                        ))
+                    }
+                </div>
+
+                <button class="carousel-nav" id="rec-next">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M9 18l6-6-6-6"></path></svg
+                    >
+                </button>
+            </div>
+        </section>
+    </div>
+</Layout>
+
+<script is:inline>
+    // --- Main Gallery Logic ---
+    let currentImageIndex = 0;
+    const thumbButtons = document.querySelectorAll(".thumb-btn");
+    const totalImages = thumbButtons.length;
+
+    function changeImage(btn, src) {
+        const mainDisplay = document.getElementById("main-display");
+
+        mainDisplay.style.opacity = "0.7";
+        setTimeout(() => {
+            mainDisplay.src = src;
+            mainDisplay.style.opacity = "1";
+        }, 150);
+
+        thumbButtons.forEach((b, index) => {
+            if (b === btn) currentImageIndex = index;
+            b.classList.remove("active-thumb");
+        });
+        btn.classList.add("active-thumb");
+
+        btn.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+        });
+    }
+
+    const leftBtn = document.getElementById("slide-left");
+    const rightBtn = document.getElementById("slide-right");
+
+    function navigateGallery(direction) {
+        if (direction === "next") {
+            currentImageIndex++;
+            if (currentImageIndex >= totalImages) currentImageIndex = 0;
+        } else {
+            currentImageIndex--;
+            if (currentImageIndex < 0) currentImageIndex = totalImages - 1;
+        }
+        if (thumbButtons[currentImageIndex]) {
+            thumbButtons[currentImageIndex].click();
+        }
+    }
+
+    leftBtn?.addEventListener("click", () => navigateGallery("prev"));
+    rightBtn?.addEventListener("click", () => navigateGallery("next"));
+
+    // --- Recommendations Carousel Logic ---
+    const recTrack = document.getElementById("rec-track");
+    const recPrev = document.getElementById("rec-prev");
+    const recNext = document.getElementById("rec-next");
+
+    recPrev?.addEventListener("click", () => {
+        // Scroll one full card width + gap approx
+        recTrack.scrollBy({ left: -300, behavior: "smooth" });
+    });
+
+    recNext?.addEventListener("click", () => {
+        recTrack.scrollBy({ left: 300, behavior: "smooth" });
+    });
+</script>
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+></script>
+
+<script is:inline>
+    // --- Model Data & Constants ---
+    // Extract base price number from data attribute for robustness
+    const priceDisplay = document.getElementById("dynamic-price");
+    const basePrice =
+        parseInt(priceDisplay.getAttribute("data-base-price")) || 0;
+
+    const wallSelect = document.getElementById("wall-thickness");
+    const insulationSelect = document.getElementById("insulation");
+    const windowsSelect = document.getElementById("windows");
+
+    // Configura jsPDF desde el objeto global
+    const { jsPDF } = window.jspdf || { jsPDF: null };
+
+    // --- State ---
+    let currentPrice = basePrice;
+
+    function updatePrice() {
+        const wallCost = parseInt(wallSelect.value) || 0;
+        const insCost = parseInt(insulationSelect.value) || 0;
+        const winCost = parseInt(windowsSelect.value) || 0;
+
+        currentPrice = basePrice + wallCost + insCost + winCost;
+
+        // Format with thousands separator
+        priceDisplay.innerHTML =
+            currentPrice.toLocaleString("es-ES") +
+            ' <small style="font-size:1.5rem">€</small>';
+
+        // Add animation effect
+        priceDisplay.style.color = "#d4af37";
+        setTimeout(() => (priceDisplay.style.color = ""), 300);
+    }
+
+    [wallSelect, insulationSelect, windowsSelect].forEach((el) => {
+        if (el) el.addEventListener("change", updatePrice);
+    });
+
+    // --- WhatsApp Logic ---
+    const whatsappBtn = document.getElementById("whatsapp-btn");
+    whatsappBtn?.addEventListener("click", () => {
+        const wallText = wallSelect.options[wallSelect.selectedIndex].text;
+        const insText =
+            insulationSelect.options[insulationSelect.selectedIndex].text;
+        const winText = windowsSelect.options[windowsSelect.selectedIndex].text;
+        const modelName =
+            document.querySelector(".model-title")?.innerText || "Modelo";
+
+        const message = `Hola, me interesa el ${modelName}.
+Configuración seleccionada:
+- Paredes: ${wallText}
+- Aislamiento: ${insText}
+- Ventanas: ${winText}
+
+Precio estimado: ${currentPrice.toLocaleString("es-ES")}€`;
+
+        const url = `https://wa.me/34848888000?text=${encodeURIComponent(message)}`;
+        window.open(url, "_blank");
+    });
+
+    // --- PDF Logic ---
+    const pdfBtn = document.getElementById("pdf-btn");
+    pdfBtn?.addEventListener("click", () => {
+        if (!window.jspdf) {
+            alert(
+                "El módulo PDF se está cargando, por favor espere un momento.",
+            );
+            return;
+        }
+
+        const doc = new window.jspdf.jsPDF();
+
+        const modelName =
+            document.querySelector(".model-title")?.innerText || "Modelo";
+        const wallText =
+            wallSelect.options[wallSelect.selectedIndex].getAttribute(
+                "data-label",
+            );
+        const insText =
+            insulationSelect.options[
+                insulationSelect.selectedIndex
+            ].getAttribute("data-label");
+        const winText =
+            windowsSelect.options[windowsSelect.selectedIndex].getAttribute(
+                "data-label",
+            );
+
+        // Styling
+        doc.setFontSize(22);
+        doc.setTextColor(40, 40, 40);
+        doc.text(`Presupuesto: ${modelName}`, 20, 20);
+
+        doc.setLineWidth(0.5);
+        doc.line(20, 25, 190, 25);
+
+        doc.setFontSize(12);
+        doc.setTextColor(60, 60, 60);
+        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 35);
+
+        // Table-like structure
+        let y = 50;
+        const details = [
+            {
+                label: "Modelo Base",
+                val: `${basePrice.toLocaleString("es-ES")} €`,
+            },
+            { label: "Paredes", val: wallText || "Estándar" },
+            { label: "Aislamiento", val: insText || "Ninguno" },
+            { label: "Ventanas", val: winText || "Estándar" },
+        ];
+
+        details.forEach((item) => {
+            doc.setFont("helvetica", "bold");
+            doc.text(item.label + ":", 20, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(item.val, 80, y);
+            y += 10;
+        });
+
+        doc.line(20, y + 5, 190, y + 5);
+
+        y += 15;
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "bold");
+        doc.text(
+            `Total estimado: ${currentPrice.toLocaleString("es-ES")} €`,
+            190,
+            y,
+            { align: "right" },
+        );
+
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.setFont("helvetica", "italic");
+        doc.text(
+            "* Este documento es una simulación y no constituye una oferta vinculante.",
+            20,
+            y + 20,
+        );
+        doc.text(
+            "* Los precios pueden variar según transporte y montaje.",
+            20,
+            y + 25,
+        );
+
+        doc.save(`Presupuesto_${modelName.replace(/\s+/g, "_")}.pdf`);
+    });
+</script>

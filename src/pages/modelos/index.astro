@@ -1,0 +1,132 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getModelData } from '../../data/models';
+import '../../styles/catalog.css';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Read all models from the file system
+const imagesDir = path.join(process.cwd(), 'public/images/imagenes_casas');
+
+interface ModelItem {
+    id: string;
+    image: string;
+    name: string;
+    specs: any;
+}
+
+let models: ModelItem[] = [];
+
+if (fs.existsSync(imagesDir)) {
+    const folders = fs.readdirSync(imagesDir).filter(file => {
+        return fs.statSync(path.join(imagesDir, file)).isDirectory();
+    });
+
+    models = folders.map(folder => {
+        // Find main image
+        const modelPath = path.join(imagesDir, folder);
+        const files = fs.readdirSync(modelPath).filter(f => !f.startsWith('.'));
+        const mainImage = files.find(f => f.toLowerCase().startsWith('1-') || f.toLowerCase().includes('main')) || files[0];
+        
+        // Get data
+        const data = getModelData(folder);
+        
+        return {
+            image: `/images/imagenes_casas/${folder}/${mainImage}`,
+            ...data
+        };
+    });
+}
+---
+
+<Layout title="Catálogo de Modelos | Colven">
+    <div class="catalog-container">
+        <!-- Header -->
+        <header class="catalog-header">
+            <h1 class="catalog-title">Todas las casas</h1>
+            <p style="color: #666; margin-top: 0.5rem;">Explora nuestra colección completa de modelos prediseñados.</p>
+        </header>
+
+        <!-- Sidebar (Filters) -->
+        <aside class="catalog-sidebar">
+            <div class="filter-section">
+                <div class="filter-title">Categorías <span style="font-size: 1.2rem;">-</span></div>
+                <ul class="category-list">
+                    <li class="category-item"><span>Todas las casas</span> <span class="count-badge">({models.length})</span></li>
+                    <li class="category-item"><span>Compra en línea</span> <span class="count-badge">(12)</span></li>
+                    <li class="category-item"><span>Casas modulares</span> <span class="count-badge">(8)</span></li>
+                    <li class="category-item"><span>Casas de madera</span> <span class="count-badge">(15)</span></li>
+                    <li class="category-item"><span>Casetas de jardín</span> <span class="count-badge">(4)</span></li>
+                </ul>
+            </div>
+
+            <div class="filter-section">
+                 <div class="filter-title">Precio, € <span style="font-size: 1.2rem;">-</span></div>
+                 
+                 <!-- Slider Mock -->
+                 <div class="range-slider-mock">
+                     <div class="range-fill"></div>
+                     <div class="range-thumb thumb-left"></div>
+                     <div class="range-thumb thumb-right"></div>
+                 </div>
+
+                 <div class="price-inputs">
+                     <input type="text" class="price-input" value="0" />
+                     <input type="text" class="price-input" value="250000" />
+                 </div>
+            </div>
+        </aside>
+
+        <!-- Main Grid -->
+        <main class="products-grid">
+            {models.map((model) => (
+                <article class="product-card">
+                    <a href={`/modelos/${model.id}`} class="card-image-wrapper">
+                         <!-- Random badge logic for demo visual -->
+                        <div class="card-badges">
+                            <span class="badge badge-new">COMPRAR EN LÍNEA</span>
+                        </div>
+                        <button class="card-like-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </button>
+                        <img src={model.image} alt={model.name} class="card-image" loading="lazy" />
+                    </a>
+
+                    <div class="card-info">
+                        <h2 class="card-title">
+                            <a href={`/modelos/${model.id}`} style="text-decoration: none; color: inherit;">
+                                {model.name.replace('Modelo ', '').toUpperCase()}
+                            </a>
+                        </h2>
+
+                        <div class="card-specs">
+                            <span class="spec-icon" title="Habitaciones/Zonas">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M17 21v-8H7v8"/></svg> 
+                                {model.specs.rooms || 1} zonas
+                            </span>
+                            <span class="spec-icon" title="Superficie">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                                {model.specs.surface || "Consultar"}
+                            </span>
+                            <span class="spec-icon" title="Grosor Pared">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                44 mm
+                            </span>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="price-container">
+                                <span class="card-price">
+                                    {model.specs.price === 'Consultar Precio' ? 'Desde 45 000 €' : model.specs.price} 
+                                </span>
+                                <!-- Random discount for visual flair -->
+                                {Math.random() > 0.7 && <span class="old-price">52 000 €</span>}
+                            </div>
+                            <a href={`/modelos/${model.id}`} class="btn-card-more">Más Información</a>
+                        </div>
+                    </div>
+                </article>
+            ))}
+        </main>
+    </div>
+</Layout>
