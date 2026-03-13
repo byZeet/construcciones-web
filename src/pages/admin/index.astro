@@ -1,0 +1,851 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import DeleteModal from "../../components/admin/DeleteModal.astro";
+import AdminHeader from "../../components/admin/AdminHeader.astro";
+---
+
+<AdminLayout title="Catálogo de Modelos | Admin Panel">
+    <!-- El contenedor principal arranca oculto hasta verificar token -->
+    <div
+        class="flex h-screen overflow-hidden"
+        style="display: none;"
+        id="dashboard-content"
+    >
+        <!-- Sidebar Navigation -->
+        <aside
+            class="w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col"
+        >
+            <div class="p-6 flex items-center gap-3">
+                <div class="bg-primary rounded-lg p-2 text-white">
+                    <span class="material-symbols-outlined text-2xl"
+                        >bungalow</span
+                    >
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">
+                        Housing Admin
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">
+                        PREMIUM ESTATES
+                    </p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-primary active-nav rounded-lg transition-colors"
+                    href="#"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">home</span
+                    >
+                    <span class="font-medium">Modelos de Casas</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="/admin/destacados"
+                >
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="font-medium">Modelos Destacados</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="/admin/articulos"
+                >
+                    <span class="material-symbols-outlined">article</span>
+                    <span class="font-medium">Artículos y Novedades</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors relative"
+                    href="/admin/clientes"
+                >
+                    <span class="material-symbols-outlined">group</span>
+                    <span class="font-medium">Clientes</span>
+                    <span
+                        id="nav-new-clients-badge"
+                        class="hidden absolute right-4 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full"
+                        >NUEVOS</span
+                    >
+                </a>
+
+                <div
+                    class="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800"
+                >
+                    <button
+                        class="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors mt-2"
+                        id="logout-btn"
+                    >
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="font-medium text-left">Cerrar Sesión</span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="p-4 m-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <p
+                    class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
+                >
+                    Soporte
+                </p>
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                    ¿Necesitas ayuda con el catálogo?
+                </p>
+                <button
+                    class="w-full py-2 text-sm font-bold bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg shadow-sm hover:shadow transition-shadow"
+                    >Contactar</button
+                >
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <AdminHeader searchPlaceholder="Buscar modelos o habitaciones..." />
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-y-auto p-8">
+                <!-- Breadcrumbs & Heading -->
+                <div
+                    class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8"
+                >
+                    <div>
+                        <nav
+                            class="flex items-center gap-2 text-sm text-slate-400 mb-2"
+                        >
+                            <a class="hover:text-primary" href="#">Admin</a>
+                            <span class="material-symbols-outlined text-xs"
+                                >chevron_right</span
+                            >
+                            <span
+                                class="text-slate-600 dark:text-slate-300 font-medium"
+                                >Modelos de Casas</span
+                            >
+                        </nav>
+                        <h2 class="text-3xl font-black tracking-tight">
+                            Catálogo de Modelos
+                        </h2>
+                        <p class="text-slate-500 mt-1">
+                            Gestión avanzada de propiedades y unidades
+                            residenciales.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-end gap-3">
+                        <button
+                            id="bulk-delete-btn"
+                            onclick="confirmBulkDelete()"
+                            class="hidden flex items-center gap-2 border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-3 rounded-xl font-bold transition-all active:scale-95"
+                        >
+                            <span class="material-symbols-outlined text-[20px]"
+                                >delete</span
+                            >
+                            <span id="bulk-delete-count" class="text-sm"
+                                >Eliminar (0)</span
+                            >
+                        </button>
+                        <button
+                            onclick="openAddModal()"
+                            class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all transform active:scale-95"
+                        >
+                            <span class="material-symbols-outlined"
+                                >add_circle</span
+                            >
+                            Agregar Modelo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Card -->
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
+                >
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr
+                                    class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase tracking-wider"
+                                >
+                                    <th class="px-6 py-5 w-12 text-center">
+                                        <input
+                                            id="select-all-checkbox"
+                                            onclick="toggleSelectAll(this)"
+                                            class="rounded border-slate-300 text-primary focus:ring-primary/20 cursor-pointer"
+                                            type="checkbox"
+                                        />
+                                    </th>
+                                    <th class="px-6 py-5">Vista</th>
+                                    <th class="px-6 py-5">Nombre del Modelo</th>
+                                    <th class="px-6 py-5">Habitaciones</th>
+                                    <th class="px-6 py-5">Precio</th>
+                                    <th class="px-6 py-5">Estado</th>
+                                    <th class="px-6 py-5 text-right"
+                                        >Acciones</th
+                                    >
+                                </tr>
+                            </thead>
+                            <tbody
+                                id="properties-tbody"
+                                class="divide-y divide-slate-100 dark:divide-slate-800"
+                            >
+                                <tr>
+                                    <td
+                                        colspan="7"
+                                        style="text-align:center; padding: 2rem;"
+                                        >Cargando propiedades...</td
+                                    >
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div
+                        class="px-8 py-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between"
+                    >
+                        <p class="text-sm text-slate-500">
+                            Mostrando todo el inventario
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <DeleteModal />
+
+    <!-- SIDE MODAL (NUEVA PROPIEDAD) -->
+    <div
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end opacity-0 pointer-events-none transition-opacity duration-300"
+        id="add-modal"
+    >
+        <div
+            class="w-full max-w-[500px] bg-white dark:bg-slate-900 h-full transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl border-l border-slate-200 dark:border-slate-800"
+            id="slide-panel"
+        >
+            <div
+                class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900"
+            >
+                <h2
+                    class="text-xl font-black text-slate-900 dark:text-white tracking-tight"
+                    id="modal-title"
+                >
+                    Nuevo Modelo
+                </h2>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="flex items-center justify-center w-8 h-8 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-300 transition-colors"
+                        onclick="closeAddModal()"
+                        type="button"
+                    >
+                        <span class="material-symbols-outlined text-[20px]"
+                            >close</span
+                        >
+                    </button>
+                    <button
+                        class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-primary/20 transition-all transform active:scale-95"
+                        onclick="submitAddForm()"
+                        type="button"
+                    >
+                        <span class="material-symbols-outlined text-[18px]"
+                            >save</span
+                        >
+                        Guardar
+                    </button>
+                </div>
+            </div>
+
+            <div
+                class="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50 dark:bg-slate-900/50"
+            >
+                <form id="add-form" class="space-y-6">
+                    <!-- Sección Básica -->
+                    <div
+                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"
+                    >
+                        <h3
+                            class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                                >info</span
+                            >
+                            Información General
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Nombre del Modelo</label
+                                >
+                                <input
+                                    type="text"
+                                    id="title"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                    placeholder="Ej: Modelo Ararat"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Descripción</label
+                                >
+                                <textarea
+                                    id="description"
+                                    rows="3"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                    placeholder="Breve descripción..."
+                                    required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="property-id" />
+
+                    <!-- Sección Fotos -->
+                    <div
+                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"
+                    >
+                        <h3
+                            class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                                >photo_library</span
+                            >
+                            Galería Visual
+                        </h3>
+                        <div
+                            class="border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 rounded-xl p-8 text-center cursor-pointer transition-colors"
+                            onclick="document.getElementById('image-input').click()"
+                        >
+                            <input
+                                type="file"
+                                id="image-input"
+                                accept="image/*"
+                                class="hidden"
+                                multiple
+                                onchange="previewImages(event)"
+                            />
+                            <div
+                                id="upload-placeholder"
+                                class="flex flex-col items-center"
+                            >
+                                <div
+                                    class="w-12 h-12 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-sm mb-3 text-primary border border-primary/20"
+                                >
+                                    <span class="material-symbols-outlined"
+                                        >add_photo_alternate</span
+                                    >
+                                </div>
+                                <p
+                                    class="text-sm font-bold text-slate-700 dark:text-slate-300"
+                                >
+                                    Añadir fotografías
+                                </p>
+                                <p class="text-[11px] text-slate-500 mt-1">
+                                    Soporta múltiples imágenes JPG/PNG
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="grid grid-cols-3 gap-3 mt-4"
+                            id="image-preview-grid"
+                        >
+                        </div>
+                    </div>
+
+                    <!-- Detalles -->
+                    <div
+                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"
+                    >
+                        <h3
+                            class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                                >architecture</span
+                            >
+                            Especificaciones Técnicas
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Superficie (m²)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="area"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                    placeholder="Ej: 120"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Precio (€)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="price"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                    placeholder="Ej: 85000"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Habitaciones</label
+                                >
+                                <input
+                                    type="number"
+                                    id="bedrooms"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                    placeholder="Ej: 3"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Baños</label
+                                >
+                                <input
+                                    type="number"
+                                    id="bathrooms"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                    placeholder="Ej: 2"
+                                    required
+                                />
+                            </div>
+                            <div class="col-span-2">
+                                <label
+                                    class="block text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+                                    >Estado</label
+                                >
+                                <select
+                                    id="status"
+                                    class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all font-medium"
+                                >
+                                    <option value="disponible"
+                                        >🟢 DISPONIBLE</option
+                                    >
+                                    <option value="vendido">🔴 VENDIDO</option>
+                                    <option value="reservado"
+                                        >🟡 RESERVADO</option
+                                    >
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</AdminLayout>
+
+<script is:inline>
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+        window.location.href = "/admin/login";
+    } else {
+        document.getElementById("dashboard-content").style.display = "flex";
+        loadProperties();
+    }
+
+    document.getElementById("logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("admin_token");
+        window.location.href = "/admin/login";
+    });
+
+    let allProperties = [];
+    let selectedFiles = [];
+    let existingImages = [];
+
+    async function loadProperties() {
+        try {
+            const res = await fetch("http://localhost:3001/api/properties");
+            allProperties = await res.json();
+            renderTable(allProperties);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById("properties-tbody");
+        tbody.innerHTML = "";
+
+        const selectAll = document.getElementById("select-all-checkbox");
+        if (selectAll) selectAll.checked = false;
+
+        const bulkBtn = document.getElementById("bulk-delete-btn");
+        if (bulkBtn) bulkBtn.classList.add("hidden");
+
+        if (data.length === 0) {
+            tbody.innerHTML =
+                '<tr><td colspan="7" style="text-align:center; padding: 2rem;">No hay propiedades guardadas.</td></tr>';
+            return;
+        }
+
+        data.forEach((p) => {
+            const tr = document.createElement("tr");
+            tr.className =
+                "hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors";
+
+            const imgHtml = p.image_url
+                ? `<img src="${p.image_url}" class="w-full h-full object-cover" onerror="this.src=''"/>`
+                : `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>`;
+
+            // Preparando status styling
+            const statusText = (p.status || "disponible").toUpperCase();
+            let statusBadge = "";
+            if (statusText === "DISPONIBLE") {
+                statusBadge =
+                    '<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">DISPONIBLE</span>';
+            } else {
+                statusBadge =
+                    '<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">VENDIDO</span>';
+            }
+
+            const shortDesc = p.description
+                ? p.description.length > 30
+                    ? p.description.substring(0, 30) + "..."
+                    : p.description
+                : "Sin descripción";
+
+            tr.innerHTML = `
+                <td class="px-6 py-4 text-center">
+                    <input class="row-checkbox rounded border-slate-300 text-primary focus:ring-primary/20 cursor-pointer" type="checkbox" value="${p.id}" onchange="updateBulkDeleteBtn()"/>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="w-16 h-12 rounded-lg bg-slate-100 overflow-hidden shadow-sm">
+                        ${imgHtml}
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <p class="font-bold text-slate-900 dark:text-slate-100">${p.title}</p>
+                    <p class="text-xs text-slate-500">${shortDesc} • ${p.area}m²</p>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                        <span class="material-symbols-outlined text-lg">bed</span>
+                        <span class="font-medium">${p.bedrooms}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="font-bold text-slate-900 dark:text-slate-100">€${p.price}</span>
+                </td>
+                <td class="px-6 py-4">
+                    ${statusBadge}
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <div class="flex justify-end gap-2">
+                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" onclick='openEditModal(${JSON.stringify(p).replace(/'/g, "&#39;")})' title="Editar">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                        <button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" onclick="deleteProperty(${p.id})" title="Eliminar">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterTable() {
+        const q = document.getElementById("search-input").value.toLowerCase();
+        const filtered = allProperties.filter(
+            (p) =>
+                p.title.toLowerCase().includes(q) ||
+                p.bedrooms.toString().includes(q),
+        );
+        renderTable(filtered);
+    }
+
+    // Modal Control
+    function resetForm() {
+        document.getElementById("add-form").reset();
+        document.getElementById("property-id").value = "";
+        document.getElementById("status").value = "disponible";
+        selectedFiles = [];
+        existingImages = [];
+        renderPreviews();
+        document.getElementById("modal-title").innerText = "Nuevo Modelo";
+    }
+
+    window.openAddModal = function () {
+        resetForm();
+        const modal = document.getElementById("add-modal");
+        const panel = document.getElementById("slide-panel");
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        panel.classList.remove("translate-x-full");
+    };
+
+    window.openEditModal = function (p) {
+        resetForm();
+        document.getElementById("property-id").value = p.id;
+        document.getElementById("title").value = p.title;
+        document.getElementById("description").value = p.description;
+        document.getElementById("area").value = p.area || 0;
+        document.getElementById("price").value = p.price || 0;
+        document.getElementById("bedrooms").value = p.bedrooms || 0;
+        document.getElementById("bathrooms").value = p.bathrooms || 0;
+
+        if (p.status) {
+            document.getElementById("status").value = p.status.toLowerCase();
+        }
+
+        if (p.images && p.images.length > 0) {
+            existingImages = p.images;
+        } else if (p.image_url) {
+            existingImages = [{ id: "legacy", image_url: p.image_url }];
+        }
+
+        renderPreviews();
+        document.getElementById("modal-title").innerText = "Editar Modelo";
+
+        const modal = document.getElementById("add-modal");
+        const panel = document.getElementById("slide-panel");
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        panel.classList.remove("translate-x-full");
+    };
+
+    window.closeAddModal = function () {
+        const modal = document.getElementById("add-modal");
+        const panel = document.getElementById("slide-panel");
+        panel.classList.add("translate-x-full");
+        setTimeout(() => {
+            modal.classList.add("opacity-0", "pointer-events-none");
+        }, 300);
+    };
+
+    window.submitAddForm = function () {
+        document
+            .getElementById("add-form")
+            .dispatchEvent(new Event("submit", { cancelable: true }));
+    };
+
+    window.previewImages = function (event) {
+        const files = Array.from(event.target.files);
+        if (files.length > 0) {
+            selectedFiles = [...selectedFiles, ...files];
+            renderPreviews();
+        }
+        event.target.value = "";
+    };
+
+    function renderPreviews() {
+        const grid = document.getElementById("image-preview-grid");
+        grid.innerHTML = "";
+
+        if (existingImages.length === 0 && selectedFiles.length === 0) {
+            document.getElementById("upload-placeholder").style.display =
+                "flex";
+            return;
+        }
+        document.getElementById("upload-placeholder").style.display = "none";
+
+        existingImages.forEach((img) => {
+            const item = document.createElement("div");
+            item.className =
+                "relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm group";
+            item.innerHTML = `
+                <img src="${img.image_url}" class="w-full h-full object-cover" />
+                <button type="button" class="absolute top-1 right-1 bg-white/90 backdrop-blur-sm p-1 rounded-full text-red-500 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-6 h-6 hover:bg-red-50" onclick="deleteExistingImage(${img.id})" title="Eliminar foto">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+            `;
+            grid.appendChild(item);
+        });
+
+        selectedFiles.forEach((file, index) => {
+            const item = document.createElement("div");
+            item.className =
+                "relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm group border-primary/50 border-dashed";
+            const url = URL.createObjectURL(file);
+            item.innerHTML = `
+                <img src="${url}" class="w-full h-full object-cover opacity-80" />
+                <button type="button" class="absolute top-1 right-1 bg-white/90 backdrop-blur-sm p-1 rounded-full text-slate-500 shadow-sm flex items-center justify-center w-6 h-6 hover:bg-slate-100" onclick="removeSelectedFile(${index})" title="Quitar seleccion">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+            `;
+            grid.appendChild(item);
+        });
+    }
+
+    window.removeSelectedFile = function (index) {
+        selectedFiles.splice(index, 1);
+        renderPreviews();
+    };
+
+    window.deleteExistingImage = async function (imageId) {
+        const propId = document.getElementById("property-id").value;
+        if (!propId || imageId === "legacy") return;
+
+        showGlobalDeleteModal(
+            "¿Eliminar esta foto?",
+            "¿Eliminar esta foto permanentemente del servidor?",
+            async () => {
+                try {
+                    const res = await fetch(
+                        `http://localhost:3001/api/properties/${propId}/images/${imageId}`,
+                        {
+                            method: "DELETE",
+                            headers: { Authorization: `Bearer ${token}` },
+                        },
+                    );
+                    if (res.ok) {
+                        existingImages = existingImages.filter(
+                            (i) => i.id !== imageId,
+                        );
+                        renderPreviews();
+                        loadProperties();
+                    } else {
+                        alert("No se pudo borrar la foto.");
+                    }
+                } catch (err) {
+                    alert("Error al borrar la foto.");
+                }
+            },
+        );
+    };
+
+    document
+        .getElementById("add-form")
+        .addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const titleInput = document.getElementById("title").value;
+            if (!titleInput) {
+                alert("Completa los campos obligatorios");
+                return;
+            }
+
+            const propId = document.getElementById("property-id").value;
+            const formMethod = propId ? "PUT" : "POST";
+            const url = propId
+                ? "http://localhost:3001/api/properties/" + propId
+                : "http://localhost:3001/api/properties";
+
+            const formData = new FormData();
+            formData.append("title", titleInput);
+            formData.append("area", document.getElementById("area").value || 0);
+            formData.append(
+                "bedrooms",
+                document.getElementById("bedrooms").value || 0,
+            );
+            formData.append(
+                "bathrooms",
+                document.getElementById("bathrooms").value || 0,
+            );
+            formData.append(
+                "price",
+                document.getElementById("price").value || 0,
+            );
+            formData.append(
+                "description",
+                document.getElementById("description").value,
+            );
+            formData.append("status", document.getElementById("status").value);
+
+            selectedFiles.forEach((file) => {
+                formData.append("images", file);
+            });
+
+            try {
+                const res = await fetch(url, {
+                    method: formMethod,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                if (res.ok) {
+                    closeAddModal();
+                    loadProperties();
+                } else {
+                    alert("No se pudo guardar la propiedad.");
+                }
+            } catch (err) {
+                alert("Error de conexión");
+            }
+        });
+
+    let deleteTargetIds = [];
+
+    window.toggleSelectAll = function (el) {
+        const checkboxes = document.querySelectorAll(".row-checkbox");
+        checkboxes.forEach((cb) => (cb.checked = el.checked));
+        updateBulkDeleteBtn();
+    };
+
+    window.updateBulkDeleteBtn = function () {
+        const checkedBoxes = document.querySelectorAll(".row-checkbox:checked");
+        const btn = document.getElementById("bulk-delete-btn");
+        const countSpan = document.getElementById("bulk-delete-count");
+
+        const selectAll = document.getElementById("select-all-checkbox");
+        const allBoxes = document.querySelectorAll(".row-checkbox");
+        selectAll.checked =
+            checkedBoxes.length === allBoxes.length && allBoxes.length > 0;
+
+        if (checkedBoxes.length > 0) {
+            btn.classList.remove("hidden");
+            countSpan.innerText = `Eliminar (${checkedBoxes.length})`;
+        } else {
+            btn.classList.add("hidden");
+        }
+    };
+
+    window.confirmBulkDelete = function () {
+        const checkedBoxes = document.querySelectorAll(".row-checkbox:checked");
+        if (checkedBoxes.length === 0) return;
+
+        const idsToDelete = Array.from(checkedBoxes).map((cb) => cb.value);
+
+        showGlobalDeleteModal(
+            `¿Eliminar ${idsToDelete.length} modelos?`,
+            "Esta acción borrará todas las propiedades seleccionadas de forma permanente.",
+            async () => {
+                try {
+                    await Promise.all(
+                        idsToDelete.map((id) =>
+                            fetch(
+                                "http://localhost:3001/api/properties/" + id,
+                                {
+                                    method: "DELETE",
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    },
+                                },
+                            ),
+                        ),
+                    );
+                    loadProperties();
+                } catch (err) {
+                    alert("Error eliminando registros.");
+                }
+            },
+        );
+    };
+
+    window.deleteProperty = function (id) {
+        showGlobalDeleteModal(
+            "¿Eliminar este modelo?",
+            "Esta acción borrará la propiedad de forma permanente y no se podrá deshacer.",
+            async () => {
+                try {
+                    await fetch("http://localhost:3001/api/properties/" + id, {
+                        method: "DELETE",
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    loadProperties();
+                } catch (err) {
+                    alert("Error eliminando registro.");
+                }
+            },
+        );
+    };
+</script>

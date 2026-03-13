@@ -1,0 +1,337 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+---
+
+<AdminLayout title="Detalle del Cliente | Admin Panel">
+    <div
+        class="flex h-screen overflow-hidden"
+        style="display: none;"
+        id="dashboard-content"
+    >
+        <!-- Sidebar Navigation -->
+        <aside
+            class="w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col"
+        >
+            <div class="p-6 flex items-center gap-3">
+                <div class="bg-primary rounded-lg p-2 text-white">
+                    <span class="material-symbols-outlined text-2xl"
+                        >bungalow</span
+                    >
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">
+                        Housing Admin
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">
+                        PREMIUM ESTATES
+                    </p>
+                </div>
+            </div>
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="/admin"
+                >
+                    <span class="material-symbols-outlined">home</span>
+                    <span class="font-medium">Modelos de Casas</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="/admin/destacados"
+                >
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="font-medium">Modelos Destacados</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="/admin/articulos"
+                >
+                    <span class="material-symbols-outlined">article</span>
+                    <span class="font-medium">Artículos y Novedades</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-primary active-nav rounded-lg transition-colors relative"
+                    href="/admin/clientes"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">group</span
+                    >
+                    <span class="font-medium">Clientes</span>
+                </a>
+
+                <div
+                    class="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800"
+                >
+                    <button
+                        class="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors mt-2"
+                        id="logout-btn"
+                    >
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="font-medium text-left">Cerrar Sesión</span>
+                    </button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header
+                class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between z-10 shrink-0"
+            >
+                <div class="flex items-center gap-4 flex-1">
+                    <h2 class="text-xl font-bold">Detalle de Solicitud</h2>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-y-auto p-8 relative">
+                <div
+                    class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8"
+                >
+                    <div>
+                        <nav
+                            class="flex items-center gap-2 text-sm text-slate-400 mb-2"
+                        >
+                            <a class="hover:text-primary" href="/admin/clientes"
+                                >Clientes</a
+                            >
+                            <span class="material-symbols-outlined text-xs"
+                                >chevron_right</span
+                            >
+                            <span
+                                class="text-slate-600 dark:text-slate-300 font-medium"
+                                >Detalle</span
+                            >
+                        </nav>
+                        <h2
+                            class="text-3xl font-black tracking-tight"
+                            id="client-name"
+                        >
+                            Cargando...
+                        </h2>
+                        <p class="text-slate-500 mt-1" id="client-date">---</p>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-end gap-3">
+                        <button
+                            onclick="window.history.back()"
+                            class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold transition-all active:scale-95"
+                        >
+                            <span class="material-symbols-outlined"
+                                >arrow_back</span
+                            >
+                            Volver
+                        </button>
+                        <a
+                            id="email-btn"
+                            href="#"
+                            class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all transform active:scale-95"
+                        >
+                            <span class="material-symbols-outlined">mail</span>
+                            Responder
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+                    >
+                        <h3
+                            class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                                >person</span
+                            > Datos de Contacto
+                        </h3>
+                        <div class="space-y-3 relative">
+                            <div>
+                                <p
+                                    class="text-[11px] text-slate-500 uppercase font-bold"
+                                >
+                                    Nombre Completo
+                                </p>
+                                <p
+                                    class="font-medium text-slate-900 dark:text-white"
+                                    id="detail-name"
+                                >
+                                    ---
+                                </p>
+                            </div>
+                            <div class="absolute right-0 top-0 text-right">
+                                <span
+                                    id="status-badge"
+                                    class="px-3 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 uppercase border border-slate-200"
+                                >
+                                    Cargando
+                                </span>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-[11px] text-slate-500 uppercase font-bold"
+                                >
+                                    Email
+                                </p>
+                                <p class="font-medium text-primary">
+                                    <a href="#" id="detail-email">---</a>
+                                </p>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-[11px] text-slate-500 uppercase font-bold"
+                                >
+                                    Teléfono
+                                </p>
+                                <p
+                                    class="font-medium text-slate-900 dark:text-white"
+                                    id="detail-phone"
+                                >
+                                    ---
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+                    >
+                        <h3
+                            class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                                >bungalow</span
+                            > Interés y Mensaje
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <p
+                                    class="text-[11px] text-slate-500 uppercase font-bold"
+                                >
+                                    Modelo Solicitado
+                                </p>
+                                <p
+                                    class="font-bold text-slate-900 dark:text-white text-lg"
+                                    id="detail-model"
+                                >
+                                    ---
+                                </p>
+                            </div>
+                            <div class="pt-2">
+                                <p
+                                    class="text-[11px] text-slate-500 uppercase font-bold mb-1"
+                                >
+                                    Mensaje de Propuesta
+                                </p>
+                                <div
+                                    class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700"
+                                >
+                                    <p
+                                        class="text-sm text-slate-700 dark:text-slate-300 italic whitespace-pre-line"
+                                        id="detail-message"
+                                    >
+                                        N/A
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</AdminLayout>
+
+<script is:inline>
+    const token = localStorage.getItem("admin_token");
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientId = urlParams.get("id");
+
+    if (!token) {
+        window.location.href = "/admin/login";
+    } else if (!clientId) {
+        window.location.href = "/admin/clientes";
+    } else {
+        document.getElementById("dashboard-content").style.display = "flex";
+        loadClientDetails();
+    }
+
+    document.getElementById("logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("admin_token");
+        window.location.href = "/admin/login";
+    });
+
+    async function loadClientDetails() {
+        try {
+            // Re-fetch all to get the specific one since no single GET endpoint exists natively
+            const res = await fetch("http://localhost:3001/api/clients", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error("Error loading data");
+
+            const allClients = await res.json();
+            const client = allClients.find((c) => c.id.toString() === clientId);
+
+            if (!client) {
+                alert("Cliente no encontrado.");
+                window.location.href = "/admin/clientes";
+                return;
+            }
+
+            // Bind Data
+            document.getElementById("client-name").textContent = client.name;
+            const dateObj = new Date(client.created_at);
+            document.getElementById("client-date").textContent =
+                "Recibido el " +
+                dateObj.toLocaleDateString("es-ES") +
+                " a las " +
+                dateObj.toLocaleTimeString("es-ES", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+
+            document.getElementById("detail-name").textContent = client.name;
+            document.getElementById("detail-email").textContent = client.email;
+            document.getElementById("detail-email").href =
+                `mailto:${client.email}`;
+            document.getElementById("email-btn").href =
+                `mailto:${client.email}?subject=Respuesta a tu solicitud sobre el modelo ${client.model || ""}`;
+            document.getElementById("detail-phone").textContent =
+                client.phone || "No especificado";
+            document.getElementById("detail-model").textContent =
+                client.model || "No especificado";
+            document.getElementById("detail-message").textContent =
+                client.message || "Sin mensaje adicional.";
+
+            const isNew = client.status === "new";
+            const badge = document.getElementById("status-badge");
+            if (isNew) {
+                badge.textContent = "NUEVO";
+                badge.className =
+                    "px-3 py-1 rounded-full text-[11px] font-bold bg-primary text-white border border-blue-600 uppercase";
+
+                // Mark as read immediately when viewed
+                markAsRead(clientId);
+            } else {
+                badge.textContent = "LEÍDO";
+                badge.className =
+                    "px-3 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 uppercase border border-slate-200";
+            }
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo cargar la información del cliente.");
+        }
+    }
+
+    async function markAsRead(id) {
+        try {
+            await fetch(`http://localhost:3001/api/clients/${id}/read`, {
+                method: "PUT",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        } catch (e) {
+            console.error("Error marking as read", e);
+        }
+    }
+</script>

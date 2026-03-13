@@ -5,59 +5,30 @@ import ComparisonSection from "../components/ComparisonSection.astro";
 import ProcessTimeline from "../components/ProcessTimeline.astro";
 import ImageComparison from "../components/ImageComparison.astro";
 
-// Data & Node Imports
-import { getModelData } from "../data/models";
-import fs from "node:fs";
-import path from "node:path";
-
-// Logic to get featured models
-const imagesDir = path.join(process.cwd(), "public/images/imagenes_casas");
-
-// Helper to get image
-const getModelImage = (id: string) => {
-  let image = "/images/img_fondo1.jpg"; // Fallback
-  const modelPath = path.join(imagesDir, id);
-
-  if (fs.existsSync(modelPath)) {
-    const files = fs.readdirSync(modelPath).filter((f) => !f.startsWith("."));
-    const mainImg =
-      files.find(
-        (f) =>
-          f.toLowerCase().startsWith("1-") || f.toLowerCase().includes("main"),
-      ) || files[0];
-
-    if (mainImg) {
-      image = `/images/imagenes_casas/${id}/${mainImg}`;
-    }
+// Fetch all properties from the database
+let dbProperties = [];
+try {
+  const response = await fetch("http://localhost:3001/api/properties");
+  if (response.ok) {
+    dbProperties = await response.json();
   }
-  return image;
-};
+} catch (e) {
+  console.warn("Backend unavailable, no properties loaded:", e);
+}
 
-// Logic to get featured models
-const featuredModelIds = ["Amazon", "Sinai", "Milan", "Sofia"];
+// Prepare arrays for UI sections
+let exclusiveModels = dbProperties.filter((p: any) => p.is_exclusive);
+if (exclusiveModels.length === 0) {
+  exclusiveModels = dbProperties.slice(0, 4); // Fallback
+}
 
-const featuredModels = featuredModelIds.map((id) => {
-  const data = getModelData(id);
-  // Clean price string for display
-  const displayPrice = data.specs.price.replace(/Desde\s+/i, "");
-
-  return {
-    ...data,
-    price: displayPrice,
-    image: getModelImage(id),
-  };
-});
-
-// Logic to get category images
-const categoryImages = {
-  modular: getModelImage("Amazon"),
-  familiar: getModelImage("Milan"),
-  alpina: getModelImage("Ararat"),
-  studio: getModelImage("Mini Giza"),
-};
+let featuredModels = dbProperties.filter((p: any) => p.is_top);
+if (featuredModels.length === 0) {
+  featuredModels = dbProperties.slice(0, 6); // Fallback
+}
 ---
 
-<Layout title="Casas prefabricadas y modulares | Colven Construcciones">
+<Layout title="Casas prefabricadas y modulares | Tayga Construcciones">
   <Hero />
 
   <main>
@@ -102,29 +73,25 @@ const categoryImages = {
         </div>
 
         <div class="models-grid">
-          <a href="/modelos/Amazon" class="model-card">
-            <img src={categoryImages.modular} alt="Serie modular" />
-            <h3>Serie Modular</h3>
-            <span>80m² – 150m²</span>
-          </a>
-
-          <a href="/modelos/Milan" class="model-card">
-            <img src={categoryImages.familiar} alt="Residencia familiar" />
-            <h3>Residencia Familiar</h3>
-            <span>140m² – 280m²</span>
-          </a>
-
-          <a href="/modelos/Ararat" class="model-card">
-            <img src={categoryImages.alpina} alt="Cabaña alpina" />
-            <h3>Cabaña Alpina</h3>
-            <span>45m² – 90m²</span>
-          </a>
-
-          <a href="/modelos/Mini Giza" class="model-card">
-            <img src={categoryImages.studio} alt="Garden Studio" />
-            <h3>Garden Studio</h3>
-            <span>25m² – 60m²</span>
-          </a>
+          {
+            exclusiveModels.map((model: any) => (
+              <a href={`/modelos/${model.id}`} class="model-card">
+                <img
+                  src={model.image_url || "/images/img_fondo1.jpg"}
+                  alt={model.title}
+                />
+                <h3>{model.title}</h3>
+                <span>
+                  {model.area}m² – {model.bedrooms} Habitaciones
+                </span>
+              </a>
+            ))
+          }
+          {
+            exclusiveModels.length === 0 && (
+              <p>No hay modelos disponibles en este momento.</p>
+            )
+          }
         </div>
       </div>
     </section>
@@ -195,7 +162,7 @@ const categoryImages = {
         {/* TOP PRODUCTS SECTION DYNAMIC */}
         <div class="top-products-grid animate-on-scroll">
           {
-            featuredModels.map((model) => (
+            featuredModels.map((model: any) => (
               <article class="product-card">
                 <div class="product-media">
                   <span class="badge-top">TOP</span>
@@ -216,50 +183,43 @@ const categoryImages = {
 
                   <a href={`/modelos/${model.id}`} class="img-link">
                     <img
-                      src={model.image}
-                      alt={`Modelo ${model.name}`}
+                      src={model.image_url || "/images/img_fondo1.jpg"}
+                      alt={`Modelo ${model.title}`}
                       loading="lazy"
                     />
                   </a>
                 </div>
 
-                <h3>{model.name}</h3>
+                <h3>{model.title}</h3>
 
                 <ul class="product-features">
                   <li>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
+                    <img
+                      src="/images/habitaciones.svg"
+                      alt="estancias"
                       width="16"
                       height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                    >
-                      <path d="M3 21h18" />
-                      <path d="M5 21V7l8-4 8 4v14" />
-                      <path d="M17 21v-8H7v8" />
-                    </svg>{" "}
-                    {model.specs.rooms} estancias
+                      style="color: currentColor;"
+                    />{" "}
+                    {model.bedrooms} estancias
                   </li>
                   <li>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
+                    <img
+                      src="/images/superficie.svg"
+                      alt="superficie"
                       width="16"
                       height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                    >
-                      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                    </svg>{" "}
-                    {model.specs.surface}
+                      style="color: currentColor;"
+                    />{" "}
+                    {model.area} m²
                   </li>
                 </ul>
 
                 <p class="price">
-                  Precio desde <strong>{model.price}</strong>
+                  Precio desde{" "}
+                  <strong>
+                    €{Number(model.price).toLocaleString("es-ES")}
+                  </strong>
                 </p>
 
                 <a href={`/modelos/${model.id}`} class="btn-outline">
@@ -313,22 +273,32 @@ const categoryImages = {
           </div>
 
           <div class="budget-form-wrapper">
-            <form class="budget-form">
+            <form class="budget-form" id="quote-form">
               <div class="form-group">
-                <input type="text" placeholder="Nombre completo" required />
+                <input
+                  type="text"
+                  id="quote-name"
+                  placeholder="Nombre completo"
+                  required
+                />
               </div>
 
               <div class="form-row">
                 <div class="form-group">
-                  <input type="email" placeholder="Email" required />
+                  <input
+                    type="email"
+                    id="quote-email"
+                    placeholder="Email"
+                    required
+                  />
                 </div>
                 <div class="form-group">
-                  <input type="tel" placeholder="Teléfono" />
+                  <input type="tel" id="quote-phone" placeholder="Teléfono" />
                 </div>
               </div>
 
               <div class="form-group">
-                <select required>
+                <select id="quote-model" required>
                   <option value="" disabled selected
                     >Selecciona un modelo</option
                   >
@@ -340,13 +310,25 @@ const categoryImages = {
               </div>
 
               <div class="form-group">
-                <textarea placeholder="Cuéntanos sobre tu proyecto..." rows="4"
-                ></textarea>
+                <textarea
+                  id="quote-message"
+                  placeholder="Cuéntanos sobre tu proyecto..."
+                  rows="4"
+                  maxlength="500"></textarea>
+                <div class="text-xs text-slate-500 mt-1 text-right">
+                  <span id="quote-message-chars">0</span>/500
+                </div>
               </div>
 
-              <button type="submit" class="btn-submit"
+              <button type="submit" id="quote-submit-btn" class="btn-submit"
                 >Enviar solicitud →</button
               >
+
+              <div
+                id="quote-feedback"
+                class="hidden mt-4 p-3 rounded-xl text-sm font-bold text-center"
+              >
+              </div>
             </form>
           </div>
         </div>
@@ -475,3 +457,70 @@ const categoryImages = {
 </Layout>
 
 <script src="../scripts/testimonials.js"></script>
+
+<script is:inline>
+  const quoteForm = document.getElementById("quote-form");
+  const messageInput = document.getElementById("quote-message");
+  const charsCounter = document.getElementById("quote-message-chars");
+  const feedbackBox = document.getElementById("quote-feedback");
+  const submitBtn = document.getElementById("quote-submit-btn");
+
+  if (messageInput && charsCounter) {
+    messageInput.addEventListener("input", () => {
+      charsCounter.textContent = messageInput.value.length;
+    });
+  }
+
+  if (quoteForm) {
+    quoteForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("quote-name").value;
+      const email = document.getElementById("quote-email").value;
+      const phone = document.getElementById("quote-phone").value;
+      const model = document.getElementById("quote-model").value;
+      const message = document.getElementById("quote-message").value;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "Enviando...";
+      feedbackBox.classList.add("hidden");
+      feedbackBox.classList.remove(
+        "bg-green-100",
+        "text-green-700",
+        "bg-red-100",
+        "text-red-700",
+      );
+
+      try {
+        const response = await fetch("http://localhost:3001/api/clients", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, phone, model, message }),
+        });
+
+        const data = await response.json();
+
+        feedbackBox.classList.remove("hidden");
+        if (response.ok) {
+          feedbackBox.classList.add("bg-green-100", "text-green-700");
+          feedbackBox.textContent =
+            "¡Solicitud enviada con éxito! Nos pondremos en contacto pronto.";
+          quoteForm.reset();
+          charsCounter.textContent = "0";
+        } else {
+          feedbackBox.classList.add("bg-red-100", "text-red-700");
+          feedbackBox.textContent =
+            data.error || "Hubo un error al enviar la solicitud.";
+        }
+      } catch (error) {
+        feedbackBox.classList.remove("hidden");
+        feedbackBox.classList.add("bg-red-100", "text-red-700");
+        feedbackBox.textContent =
+          "Error de conexión. Por favor, inténtalo más tarde.";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Enviar solicitud →";
+      }
+    });
+  }
+</script>

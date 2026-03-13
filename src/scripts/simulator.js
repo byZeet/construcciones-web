@@ -69,7 +69,7 @@ const setupContactButtons = (items, total) => {
 
     const phoneNumber = "34653893623"; 
     const message = encodeURIComponent(
-        `¡Hola Colven Construcciones! 👋\n\n` +
+        `¡Hola Tayga Construcciones! 👋\n\n` +
         `He realizado una simulación en la web para mi casa de madera:\n` +
         `---------------------------\n` +
         `✅ ${items.join('\n✅ ')}\n` +
@@ -111,7 +111,7 @@ const setupPDFButton = () => {
         const header = document.createElement('div');
 header.innerHTML = `
     <h1 style="color: #1a1f36; font-family: serif; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #F5E0B7; padding-bottom: 10px;">
-        Colven Construcciones
+        Tayga Construcciones
     </h1>
     <p style="font-size: 10px; color: #888; margin-bottom: 30px;">Presupuesto de Casa de Madera - Válido por 15 días</p>
 `;
@@ -120,7 +120,7 @@ elementClone.prepend(header);
 
         const opt = {
             margin:       [1, 1, 1, 1], // Márgenes de 1cm
-            filename:     'Presupuesto_Colven_Construcciones.pdf',
+            filename:     'Presupuesto_Tayga_Construcciones.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
                 scale: 2, 

@@ -1,0 +1,102 @@
+---
+// src/components/admin/DeleteModal.astro
+---
+
+<!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN REUTILIZABLE -->
+<div
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[70] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    id="global-delete-modal"
+>
+    <div
+        class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300"
+        id="global-delete-panel"
+    >
+        <div class="p-6 text-center">
+            <div
+                class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4 text-red-500"
+            >
+                <span class="material-symbols-outlined text-3xl"
+                    >delete_forever</span
+                >
+            </div>
+            <h3
+                class="text-xl font-black text-slate-900 dark:text-white mb-2"
+                id="global-delete-modal-title"
+            >
+                ¿Eliminar?
+            </h3>
+            <p
+                class="text-slate-500 text-sm mb-6"
+                id="global-delete-modal-desc"
+            >
+                Esta acción es permanente y no se podrá deshacer.
+            </p>
+
+            <div class="flex gap-3">
+                <button
+                    type="button"
+                    onclick="closeGlobalDeleteModal()"
+                    class="flex-1 py-3 px-4 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 transition-colors"
+                    >Cancelar</button
+                >
+                <button
+                    type="button"
+                    onclick="executeGlobalDelete()"
+                    class="flex-1 py-3 px-4 rounded-xl font-bold bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-colors"
+                    >Eliminar</button
+                >
+            </div>
+        </div>
+    </div>
+</div>
+
+<script is:inline>
+    let globalDeleteCallback = null;
+
+    window.showGlobalDeleteModal = function (title, desc, onConfirm) {
+        document.getElementById("global-delete-modal-title").innerText = title;
+        document.getElementById("global-delete-modal-desc").innerText =
+            desc || "Esta acción es permanente y no se podrá deshacer.";
+
+        globalDeleteCallback = onConfirm;
+
+        const modal = document.getElementById("global-delete-modal");
+        const panel = document.getElementById("global-delete-panel");
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        panel.classList.remove("scale-95");
+        panel.classList.add("scale-100");
+    };
+
+    window.closeGlobalDeleteModal = function () {
+        const modal = document.getElementById("global-delete-modal");
+        const panel = document.getElementById("global-delete-panel");
+        panel.classList.remove("scale-100");
+        panel.classList.add("scale-95");
+        setTimeout(() => {
+            modal.classList.add("opacity-0", "pointer-events-none");
+        }, 300);
+        globalDeleteCallback = null;
+    };
+
+    window.executeGlobalDelete = async function () {
+        if (globalDeleteCallback) {
+            const btn = document.querySelector(
+                "#global-delete-panel button.bg-red-500",
+            );
+            const originalText = btn.innerHTML;
+            btn.innerHTML =
+                '<span class="material-symbols-outlined animate-spin" style="font-size: 18px; vertical-align: middle;">refresh</span> Cargando...';
+            btn.disabled = true;
+
+            try {
+                await globalDeleteCallback();
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                closeGlobalDeleteModal();
+            }
+        } else {
+            closeGlobalDeleteModal();
+        }
+    };
+</script>
